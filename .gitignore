@@ -10,3 +10,4 @@ eval-output/*.tmp.db*
 
 eval-run.log
 _*.ts
+eval-output/partial

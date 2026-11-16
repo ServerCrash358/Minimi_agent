@@ -1,11 +1,11 @@
-# Sample 3 from a brand-new user
+# Brand-new user asks about a past chat
 
 **Result:** PASS  
-**Why this case exists:** What a grader sees on first run: no history at all. Say so, do not invent, and do not leak another user's demo data.
+**Why this case exists:** First-run experience: no history at all. Say so, and do not leak another user's demo data.
 
 ## Question
 
-Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+Yesterday I asked you about vector databases. Has the pricing changed?
 
 ## Checks
 
@@ -16,15 +16,15 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 1.3 s, answer starts 4.9 s, total 5.8 s, 2 model step(s).
+First token 0.8 s, answer starts 0.8 s, total 1.8 s, 1 model step(s).
 
 ## Searches
 
-- `Postgres hosting pricing`: 5 results, 1825 ms
+None.
 
 ## Answer
 
-I have no record of a conversation on Tuesday, 10 November 2026, regarding Postgres hosting. Therefore, I cannot compare the current pricing with any previous pricing. If you provide me with the specific details of the pricing you were interested in last Tuesday, I can check the current pricing for those specific plans and providers.
+I have no record of a past conversation about vector databases or their pricing from yesterday or any other date. If you provide me with specific vector databases you are interested in, I can check their current pricing for you.
 
 <details><summary>Memory block the model saw</summary>
 
@@ -36,9 +36,9 @@ If the user is not actually asking about an earlier conversation, ignore this se
 This user has no stored conversations at all outside the current chat.
 
 Dates found in the user's message and what was found for each:
-- "Last Tuesday" -> Tue 10 Nov 2026: no conversations
+- "Yesterday" -> Sun 15 Nov 2026: no conversations
 
-## Tue 10 Nov 2026: NO conversations stored.
+## Sun 15 Nov 2026: NO conversations stored.
 
 ## RECORD STATUS: NO EARLIER CONVERSATION WAS FOUND for the date(s) and topic in the user's message.
 If the user is referring to an earlier conversation:

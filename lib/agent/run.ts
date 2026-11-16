@@ -26,10 +26,10 @@ import {
 import { renderMemoryBlock } from "../memory/context";
 import { retrieveMemory, summariseMemory } from "../memory/retrieve";
 import { resolveDates } from "../temporal/resolve";
-import { stripThinking } from "../text";
+import { normaliseCitations, stripThinking } from "../text";
 import { newTrace, type Trace } from "../trace";
-import type { ChatMessage } from "../types";
-import { mainModel } from "./model";
+import type { ChatMessage, SearchToolOutput } from "../types";
+import { mainModel, providerOptionsFor } from "./model";
 import { buildSystemPrompt } from "./prompt";
 import { SourceCollector, makeSearchTool, type SearchFn } from "./tool";
 
@@ -54,6 +54,19 @@ export type TurnInput = {
 };
 
 export type TurnOutcome = { assistantMessageId: string; text: string; trace: Trace };
+
+/** The searches done so far, as plain text, for the forced final step. */
+export function digestOfSearches(outputs: SearchToolOutput[]): string {
+  const lines = ["# Search results gathered so far (use these; cite with the [n] shown)"];
+  for (const o of outputs) {
+    if (!o || typeof o !== "object") continue;
+    lines.push(`\nSearch: ${o.query}`);
+    if ("error" in o) lines.push(`(failed: ${o.error})`);
+    else for (const r of o.results) lines.push(`${r.cite} ${r.title} (${r.url}${r.date ? `, ${r.date}` : ""}): ${r.excerpt}`);
+  }
+  if (lines.length === 1) lines.push("(no searches were run)");
+  return lines.join("\n");
+}
 
 export function validTimezone(tz: string | undefined): string {
   return tz && DateTime.local().setZone(tz).isValid ? tz : "UTC";
@@ -202,10 +215,23 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
         tools,
         stopWhen: isStepCount(MAX_STEPS),
         // Last step: tools off, so the model must write the answer with what it has.
-        prepareStep: ({ stepNumber }) =>
+        // Last step: tools off, so the model must write the answer with what it has.
+        // Some providers (Bedrock) silently DROP all tool calls and results from the conversation when tools are
+        // disabled, which left a model answering "no searches were available" with four results in hand. So the
+        // gathered results are handed over as plain text in the instructions, and the tool traffic is removed
+        // from the messages. Same behaviour on every provider.
+        prepareStep: ({ stepNumber, steps, initialMessages }) =>
           stepNumber >= MAX_STEPS - 1
-            ? { toolChoice: "none", instructions: buildSystemPrompt({ now: startedAt, tz, memoryBlock, searchesLeft: false }) }
+            ? {
+                toolChoice: "none",
+                messages: initialMessages,
+                instructions:
+                  buildSystemPrompt({ now: startedAt, tz, memoryBlock, searchesLeft: false }) +
+                  "\n\n" +
+                  digestOfSearches(steps.flatMap((s) => s.toolResults.map((r) => r.output as SearchToolOutput))),
+              }
             : undefined,
+        providerOptions: providerOptionsFor(label),
         abortSignal: signal,
         onChunk: ({ chunk }) => {
           touch();
@@ -229,7 +255,7 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
           trace.steps = event.steps.length;
           trace.finishReason = String(event.finishReason);
           trace.usage = { inputTokens: event.totalUsage?.inputTokens, outputTokens: event.totalUsage?.outputTokens };
-          const text = stripThinking(event.text).trim();
+          const text = normaliseCitations(stripThinking(event.text)).trim();
           if (!text) {
             const err = new Error("The model returned an empty answer.");
             trace.error = err.message;

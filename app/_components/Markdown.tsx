@@ -2,7 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { stripThinking } from "@/lib/text";
+import { normaliseCitations, stripThinking } from "@/lib/text";
 import type { SourceData } from "@/lib/types";
 
 /** Turn "[3]" into a markdown link to source 3. Leaves real markdown links "[text](url)" alone. */
@@ -46,7 +46,7 @@ export function Markdown({ text, sources }: { text: string; sources: Map<number,
           },
         }}
       >
-        {linkCitations(stripThinking(text), sources)}
+        {linkCitations(normaliseCitations(stripThinking(text)), sources)}
       </ReactMarkdown>
     </div>
   );

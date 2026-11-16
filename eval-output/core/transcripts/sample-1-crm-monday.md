@@ -18,30 +18,30 @@ On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them
 
 ## Timing
 
-First token 1.9 s, answer starts 8.7 s, total 10.9 s, 2 model step(s).
+First token 3.4 s, answer starts 13.6 s, total 15.9 s, 2 model step(s).
 
 ## Searches
 
-- `HubSpot Sales Hub pricing per seat` (site hubspot.com): 3 results, 583 ms
-- `Pipedrive pricing per seat` (site pipedrive.com): 3 results, 832 ms
-- `Zoho CRM pricing per seat` (site zoho.com): 3 results, 1444 ms
-- `Salesforce Sales pricing per seat` (site salesforce.com): 3 results, 343 ms
-- `Freshsales pricing per seat` (site freshworks.com): 3 results, 1263 ms
-- `CRM tool announcements since 2026-11-09` (since 2026-11-09): 3 results, 2638 ms
+- `HubSpot Sales Hub pricing per seat` (site hubspot.com): 1 results, 3765 ms
+- `Pipedrive pricing per seat` (site pipedrive.com): 3 results, 2409 ms
+- `Zoho CRM pricing per seat` (site zoho.com): 3 results, 2405 ms
+- `Salesforce Sales pricing per seat` (site salesforce.com): 3 results, 4953 ms
+- `Freshsales pricing per seat` (site freshworks.com): 3 results, 3992 ms
+- `CRM tool updates announcements` (since 2026-11-09): 4 results, 1895 ms
 
 ## Answer
 
-As of 16 November 2026, here is the current status of the CRM tools you shortlisted:
+As of 16 November 2026, here is the status of the CRM tools you shortlisted on Monday, 9 November 2026:
 
-| Item | Then (9 Nov 2026) | Now | Verdict | Source |
+| Item | Then (9 Nov 2026) | Now (16 Nov 2026) | Verdict | Source |
 | --- | --- | --- | --- | --- |
-| HubSpot Sales Hub Starter price per seat per month | $20 | $20 | Unchanged | [6] |
-| Pipedrive Advanced price per seat per month | $34 | $39 | Changed | [8] |
-| Zoho CRM Professional price per seat per month | $23 | $23 | Unchanged | [15] |
-| Salesforce Sales Starter Suite price per seat per month | $25 | $25 | Unchanged | [1] |
-| Freshsales Growth price per seat per month | $11 | $9 | Changed | [11] |
+| HubSpot Sales Hub Starter price per seat per month | $20 | $9 (annual) / $15 (monthly) | Changed | [11] |
+| Pipedrive Advanced price per seat per month | $34 | $14–$79 | Changed | [8][9][10] |
+| Zoho CRM Professional price per seat per month | $23 | $23 | Unchanged | [5][6][7] |
+| Salesforce Sales Starter Suite price per seat per month | $25 | $25 | Unchanged | [15][16][17] |
+| Freshsales Growth price per seat per month | $11 | $9 | Changed | [12][13][14] |
 
-Summary: Pipedrive and Freshsales have changed their pricing since the last check. Pipedrive's Advanced plan is now $39 per seat per month, and Freshsales' Growth plan is now $9 per seat per month. HubSpot Sales Hub, Zoho CRM, and Salesforce Sales have not changed their pricing.
+Summary: HubSpot Sales Hub Starter and Freshsales Growth have changed prices since the last check. Pipedrive Advanced has a broader price range now. Zoho CRM Professional and Salesforce Sales Starter Suite remain unchanged. There have been updates and new features announced for HubSpot, ServiceNow, Creatio, and Zite since the last check.
 
 <details><summary>Memory block the model saw</summary>
 

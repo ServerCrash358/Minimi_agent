@@ -15,7 +15,7 @@ What did I ask you yesterday?
 
 ## Timing
 
-First token 2.1 s, answer starts 2.1 s, total 2.4 s, 1 model step(s).
+First token 3.2 s, answer starts 3.2 s, total 3.6 s, 1 model step(s).
 
 ## Searches
 
@@ -23,15 +23,10 @@ None.
 
 ## Answer
 
-Yesterday, you asked:
+Yesterday, on Wednesday 11 March 2026, you asked: "How much does Linear cost per seat?"
 
-"How much does Linear cost per seat?"
-
-My answer was:
-
+Here is what I told you then:
 "Linear Standard is $10 per user per month, billed annually."
-
-If you need to check if this is still current, let me know.
 
 <details><summary>Memory block the model saw</summary>
 

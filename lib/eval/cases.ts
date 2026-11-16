@@ -18,7 +18,7 @@ export type MemorySummary = ReturnType<typeof summariseMemory>;
 export type EvalEnv = {
   nowMs: number;
   tz: string;
-  seeded: Record<SeededConversation["key"], SeededConversation>;
+  seeded: Record<string, SeededConversation>;
   /** Has the three demo conversations. */
   userId: string;
   /** Has no history at all. */
@@ -50,7 +50,7 @@ export type EvalCase = {
 
 // ---------------------------------------------------------------- check helpers
 
-const check = (name: string, test: (x: Ctx) => true | string): Check => ({ name, test });
+export const check = (name: string, test: (x: Ctx) => true | string): Check => ({ name, test });
 
 const memory = (x: Ctx): MemorySummary | null => {
   const m = x.trace.memory as MemorySummary | { error: string } | null;
@@ -61,35 +61,35 @@ const recalledIds = (x: Ctx): Set<string> => {
   return new Set(m ? [...m.ranges.flatMap((r) => r.hits.flatMap((h) => h.turns)), ...m.topical] : []);
 };
 
-const answered = check("produced an answer", (x) => (!x.error && x.answer.trim().length > 0 ? true : `no answer (${x.error ?? "empty"})`));
-const recalls = (c: SeededConversation) =>
+export const answered = check("produced an answer", (x) => (!x.error && x.answer.trim().length > 0 ? true : `no answer (${x.error ?? "empty"})`));
+export const recalls = (c: SeededConversation) =>
   check(`recalled the "${c.key}" conversation (${c.date})`, (x) => (recalledIds(x).has(c.questionId) ? true : "that turn was not in the memory block"));
-const recallsNothing = check("memory found no conversation to recall", (x) => (recalledIds(x).size === 0 ? true : `recalled ${recalledIds(x).size} turn(s)`));
-const memoryConsulted = (yes: boolean) =>
+export const recallsNothing = check("memory found no conversation to recall", (x) => (recalledIds(x).size === 0 ? true : `recalled ${recalledIds(x).size} turn(s)`));
+export const memoryConsulted = (yes: boolean) =>
   check(yes ? "consulted memory" : "did not consult memory", (x) => ((memory(x)?.attempted ?? false) === yes ? true : `attempted=${memory(x)?.attempted}`));
-const searches = (min: number, max = Infinity) =>
+export const searches = (min: number, max = Infinity) =>
   check(`ran ${min}${max === Infinity ? "+" : `-${max}`} searches`, (x) =>
     x.trace.searches.length >= min && x.trace.searches.length <= max ? true : `ran ${x.trace.searches.length}`);
-const noSearch = check("did not search", (x) => (x.trace.searches.length === 0 ? true : `searched ${x.trace.searches.length}x`));
-const distinctSites = (min: number) =>
+export const noSearch = check("did not search", (x) => (x.trace.searches.length === 0 ? true : `searched ${x.trace.searches.length}x`));
+export const distinctSites = (min: number) =>
   check(`searched ${min}+ distinct vendor sites`, (x) => {
     const n = new Set(x.trace.searches.map((s) => s.site).filter(Boolean)).size;
     return n >= min ? true : `only ${n} distinct site(s)`;
   });
-const usedSite = (re: RegExp) =>
+export const usedSite = (re: RegExp) =>
   check(`searched the vendor's own site (${re})`, (x) => (x.trace.searches.some((s) => s.site && re.test(s.site)) ? true : "no search used the site parameter for it"));
-const maxSteps = (n: number) => check(`finished in <= ${n} model steps (searches issued in parallel)`, (x) => (x.trace.steps <= n ? true : `took ${x.trace.steps} steps`));
-const matches = (re: RegExp, label: string) => check(`answer ${label}`, (x) => (re.test(x.answer) ? true : `answer does not match ${re}`));
-const lacks = (re: RegExp, label: string) => check(`answer ${label}`, (x) => (re.test(x.answer) ? `answer matches ${re}` : true));
-const citations = (min: number) =>
+export const maxSteps = (n: number) => check(`finished in <= ${n} model steps (searches issued in parallel)`, (x) => (x.trace.steps <= n ? true : `took ${x.trace.steps} steps`));
+export const matches = (re: RegExp, label: string) => check(`answer ${label}`, (x) => (re.test(x.answer) ? true : `answer does not match ${re}`));
+export const lacks = (re: RegExp, label: string) => check(`answer ${label}`, (x) => (re.test(x.answer) ? `answer matches ${re}` : true));
+export const citations = (min: number) =>
   check(`cites ${min}+ distinct sources`, (x) => {
     const n = new Set([...x.answer.matchAll(/\[(\d{1,2})\]/g)].map((m) => m[1])).size;
     return n >= min ? true : `only ${n} distinct citation(s)`;
   });
-const hasTable = check("uses a table", (x) => (/^\s*\|.*\|\s*$/m.test(x.answer) && /\|\s*:?-{3,}/.test(x.answer) ? true : "no markdown table"));
+export const hasTable = check("uses a table", (x) => (/^\s*\|.*\|\s*$/m.test(x.answer) && /\|\s*:?-{3,}/.test(x.answer) ? true : "no markdown table"));
 
-const VERDICT = /\b(unchanged|changed|could not verify|couldn.t verify|still (correct|true|the same|accurate)|outdated|no longer|now differs|different)\b/i;
-const NO_RECORD = /(no record|don.t have (any |a )?(record|history)|do not have (any |a )?(record|history)|no (stored|saved|previous|earlier) (conversation|chat|record)|not have (any )?(record|history)|haven.t (talked|discussed|spoken)|no conversation)/i;
+export const VERDICT = /\b(unchanged|changed|could not verify|couldn.t verify|still (correct|true|the same|accurate)|outdated|no longer|now differs|different)\b/i;
+export const NO_RECORD = /(no record|(don.t|do not|didn.t|did not) have (any |a )?(stored |saved |previous |earlier )?(record|history|conversation)|no (stored|saved|previous|earlier) (conversation|chat|record)|not have (any )?(record|history)|haven.t (talked|discussed|spoken)|no conversation)/i;
 
 // ---------------------------------------------------------------- the cases
 

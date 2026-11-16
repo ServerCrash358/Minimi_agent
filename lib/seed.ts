@@ -11,9 +11,9 @@ import { ensureThread, insertFacts, insertMessage, insertSources, newId } from "
 // Rows are flagged demo=1 and titled "[demo]". The prices are deliberately a little out of date: the point is to
 // give the agent something to re-check against the live web, not to be a source of truth.
 
-type Fact = { entity: string; attribute: string; value: string; source_url: string };
-type Source = { n: number; url: string; title: string };
-type Conversation = { key: "crm" | "python" | "postgres"; day: DateTime; title: string; question: string; answer: string; sources: Source[]; facts: Fact[] };
+export type Fact = { entity: string; attribute: string; value: string; source_url: string };
+export type Source = { n: number; url: string; title: string };
+export type Conversation = { key: string; day: DateTime; title: string; question: string; answer: string; sources: Source[]; facts: Fact[] };
 
 function conversations(nowMs: number, tz: string): Conversation[] {
   const today = DateTime.fromMillis(nowMs, { zone: tz }).startOf("day");
@@ -114,7 +114,7 @@ export function clearDemoHistory(userId: string) {
 }
 
 export type SeededConversation = {
-  key: Conversation["key"];
+  key: string;
   title: string;
   /** "Tue 10 Nov 2026" */
   date: string;
@@ -123,10 +123,10 @@ export type SeededConversation = {
   answerId: string;
 };
 
-export function seedDemoHistory(opts: { userId: string; nowMs: number; tz: string }): SeededConversation[] {
-  clearDemoHistory(opts.userId);
+/** Store conversations as backdated, demo-flagged history for one user. Shared by the demo seed and the held-out eval set. */
+export function insertConversations(convs: Conversation[], opts: { userId: string; tz: string }): SeededConversation[] {
   const out: SeededConversation[] = [];
-  for (const c of conversations(opts.nowMs, opts.tz)) {
+  for (const c of convs) {
     const asked = c.day.set({ hour: 10, minute: 15 }).toMillis();
     const answered = asked + 25_000;
     const threadId = newId();
@@ -141,4 +141,9 @@ export function seedDemoHistory(opts: { userId: string; nowMs: number; tz: strin
     out.push({ key: c.key, title: c.title, date: c.day.toFormat("ccc d LLL yyyy"), isoDate: c.day.toFormat("yyyy-MM-dd"), questionId, answerId });
   }
   return out;
+}
+
+export function seedDemoHistory(opts: { userId: string; nowMs: number; tz: string }): SeededConversation[] {
+  clearDemoHistory(opts.userId);
+  return insertConversations(conversations(opts.nowMs, opts.tz), opts);
 }

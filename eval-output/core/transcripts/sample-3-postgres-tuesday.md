@@ -22,25 +22,25 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 0.8 s, answer starts 8.1 s, total 9.5 s, 2 model step(s).
+First token 1.4 s, answer starts 5.2 s, total 7.3 s, 2 model step(s).
 
 ## Searches
 
-- `pricing` (site neon.tech): 3 results, 3775 ms
-- `pricing` (site supabase.com): 3 results, 1965 ms
-- `rds postgresql pricing` (site aws.amazon.com): 3 results, 1881 ms
+- `pricing` (site neon.tech): 3 results, 537 ms
+- `pricing` (site supabase.com): 3 results, 457 ms
+- `rds postgresql pricing` (site aws.amazon.com): 3 results, 539 ms
 
 ## Answer
 
-As of 16 November 2026, here are the changes in pricing since 10 November 2026:
+As of 16 November 2026, here are the changes in pricing for managed Postgres hosting since last Tuesday:
 
 | Item | Then (10 Nov 2026) | Now | Verdict | Source |
 | --- | --- | --- | --- | --- |
-| Neon Launch plan price per month | $19 | Usage-based, typical spend: $15/mo | Changed | [9] |
-| Supabase Pro plan price per month | $25 | $25 | Unchanged | [5] |
-| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [1] |
+| Neon Launch plan price per month | $19 | Usage-based, typical spend $15/mo | Changed | [6] |
+| Supabase Pro plan price per month | $25 | $25 | Unchanged | [2] |
+| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [7] |
 
-**Summary:** Neon's Launch plan is now usage-based, with a typical spend of $15/month. Supabase Pro and AWS RDS for PostgreSQL remain unchanged.
+Neon's Launch plan has changed to a usage-based model with a typical spend of $15 per month. Supabase Pro plan and AWS RDS for PostgreSQL pricing remain unchanged.
 
 <details><summary>Memory block the model saw</summary>
 

@@ -2,7 +2,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
-import type { LanguageModel } from "ai";
+import type { JSONValue, LanguageModel } from "ai";
 
 // MODEL="provider:model-id" picks the model at runtime; swapping providers is an env change.
 //   anthropic:claude-sonnet-5-5 | openai:gpt-5 | google:gemini-3-flash-preview | bedrock:us.anthropic.claude-sonnet-5-5
@@ -75,6 +75,15 @@ function build(spec: string): { model: LanguageModel; label: string } {
       break;
   }
   return { model, label: `${provider}:${id}` };
+}
+
+/**
+ * Per-model request options. gpt-oss is a reasoning model: at its default effort it spent ~20 s thinking before the
+ * first word of a simple price answer. Low effort is enough for "read these excerpts and write the diff".
+ */
+export function providerOptionsFor(label: string): Record<string, Record<string, JSONValue>> | undefined {
+  if (/gpt-oss/i.test(label)) return { bedrock: { additionalModelRequestFields: { reasoning_effort: "low" } } };
+  return undefined;
 }
 
 /** The main answering model. Throws ConfigError with a message that names what is missing. */

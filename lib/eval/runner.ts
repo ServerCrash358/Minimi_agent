@@ -5,9 +5,9 @@ import { runTurn } from "../agent/run";
 import { setNowOverride, nowMs } from "../clock";
 import { openDb, useDb } from "../db";
 import { extractFactsForMessage } from "../memory/facts";
-import { seedDemoHistory } from "../seed";
 import type { SearchTrace, Trace } from "../trace";
-import { buildCases, type EvalCase, type EvalEnv } from "./cases";
+import type { EvalCase, EvalEnv } from "./cases";
+import { SUITES, type Suite } from "./suites";
 import type { SearchFn } from "../agent/tool";
 import type { LanguageModel } from "ai";
 
@@ -30,6 +30,8 @@ export type CaseResult = {
 };
 
 export type EvalReport = {
+  suite: Suite["id"];
+  suiteTitle: string;
   model: string;
   startedAt: string;
   tz: string;
@@ -58,6 +60,7 @@ export function stats(values: number[]): Stats {
 }
 
 export type RunOptions = {
+  suite?: Suite["id"];
   only?: string[];
   log?: (line: string) => void;
   /** Test seams. */
@@ -76,7 +79,8 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
   const userId = "eval-seeded";
   const emptyUserId = "eval-empty";
   const startedNow = nowMs();
-  const seededList = seedDemoHistory({ userId, nowMs: startedNow, tz });
+  const suite = SUITES[opts.suite ?? "core"];
+  const seededList = suite.seed(userId, startedNow, tz);
   const env: EvalEnv = {
     nowMs: startedNow,
     tz,
@@ -85,7 +89,7 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
     seeded: Object.fromEntries(seededList.map((s) => [s.key, s])) as EvalEnv["seeded"],
   };
 
-  let cases = (opts.cases ?? buildCases)(env);
+  let cases = (opts.cases ?? suite.build)(env);
   if (opts.only?.length) cases = cases.filter((c) => opts.only!.includes(c.id));
 
   const results: CaseResult[] = [];
@@ -164,6 +168,8 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
 
   const ok = results.filter((r) => !r.error);
   return {
+    suite: suite.id,
+    suiteTitle: suite.title,
     model: modelLabel || "unknown",
     startedAt: new Date(startedNow).toISOString(),
     tz,
@@ -186,7 +192,7 @@ const sec = (ms?: number) => (ms === undefined || !Number.isFinite(ms) ? "n/a" :
 export function renderResultsMarkdown(r: EvalReport): string {
   const s = r.summary;
   const lines = [
-    `# Eval results`,
+    `# Eval results: ${r.suiteTitle}`,
     ``,
     `- Model: \`${r.model}\``,
     `- Run: ${r.startedAt} (timezone ${r.tz})`,
@@ -205,7 +211,7 @@ export function renderResultsMarkdown(r: EvalReport): string {
         } |`,
     ),
     ``,
-    `Transcripts with the full answer, the memory block the model saw, and every search are in \`eval-output/latest/transcripts/\`.`,
+    `Transcripts with the full answer, the memory block the model saw, and every search are in the \`transcripts/\` folder next to this file.`,
     ``,
   ];
   return lines.join("\n");

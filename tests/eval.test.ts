@@ -14,10 +14,32 @@ test("percentile: nearest-rank, robust to tiny samples and order", () => {
   assert.deepEqual(stats([1000, 2000, 3000, NaN]), { n: 3, mean: 2000, p50: 2000, p90: 3000, max: 3000 });
 });
 
-async function runOne(id: string, answer: string) {
+async function runOne(id: string, answer: string, suite: "core" | "holdout" = "core") {
   const m = scriptedModel([{ text: answer }]);
-  return runEval({ only: [id], model: { model: m.model, label: "mock:scripted" } });
+  return runEval({ suite, only: [id], model: { model: m.model, label: "mock:scripted" } });
 }
+
+// ---- held-out suite: the pipeline-level cases, with a scripted model (no network)
+
+test("holdout: Los Angeles 'yesterday' across the DST change is found (a UTC server would miss it)", async () => {
+  const r = await runOne("h11-timezone-los-angeles", "You asked how much Figma Professional costs per seat; it was $15 per editor.", "holdout");
+  assert.deepEqual(r.results[0].checks.filter((c) => !c.ok), []);
+  assert.equal(r.results[0].passed, true);
+});
+
+test("holdout: seeded history is recalled by weekday, by 'two weeks ago', and by explicit date", async () => {
+  for (const [id, key] of [["h1-thursday-helpdesk", "helpdesk"], ["h2-5-november", "typescript"], ["h3-two-weeks-ago-vectordb", "vectordb"]] as const) {
+    const r = await runOne(id, "ok", "holdout");
+    const recall = r.results[0].checks.find((c) => c.name.startsWith(`recalled the "${key}"`));
+    assert.equal(recall?.ok, true, `${id}: the pipeline put the "${key}" conversation in front of the model`);
+  }
+});
+
+test("holdout: no record, and no leak of another user's demo data", async () => {
+  assert.equal((await runOne("h5-no-history-date", "I have no record of a conversation on that date.", "holdout")).results[0].passed, true);
+  assert.equal((await runOne("h6-new-user", "I have no record of that chat, so I cannot compare.", "holdout")).results[0].passed, true);
+  assert.equal((await runOne("h6-new-user", "No record, but Pinecone Standard was $50.", "holdout")).results[0].passed, false);
+});
 
 test("the timezone case finds the user's local 'yesterday' (this exercises the real resolver and retrieval)", async () => {
   const r = await runOne("timezone-edge", "Yesterday you asked how much Linear costs per seat.");
