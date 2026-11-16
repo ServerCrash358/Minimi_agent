@@ -12,7 +12,8 @@
 //    so it is not sent.
 //  - the same page often comes back several times as /pricing?ref=..., so URLs are canonicalised
 //    and de-duplicated.
-//  - prices sit in the first ~2k characters of the main plan tables, so an 8k window is enough.
+//  - prices sit in the first ~2k characters of the main plan tables, and the rest of a page is mostly navigation,
+//    so pages are clipped to the top plus windows around later prices (see clipPage).
 
 export type SearchHit = {
   title: string;
@@ -46,7 +47,7 @@ export type SearchOptions = {
 
 const ENDPOINT = "https://api.tavily.com/search";
 const OPEN_EXCERPT_CHARS = 1200;
-const SITE_PAGE_CHARS = 8000;
+const SITE_PAGE_CHARS = 4500;
 
 /** "https://www.HubSpot.com/pricing" -> "hubspot.com". Returns undefined if it is not a hostname. */
 export function normaliseSite(site?: string): string | undefined {
@@ -81,6 +82,33 @@ function dedupeKey(url: string): string {
   } catch {
     return url;
   }
+}
+
+/**
+ * Shrink a full pricing page to what a price comparison needs. Measured on Supabase, Neon and HubSpot: the plan
+ * tables start within the first ~2k characters, and the rest of a 20-30k page is navigation, FAQ and legal text.
+ * Keep the top of the page (title, plan names), then a window around each further price mention, until the budget
+ * is spent. Five vendors used to put ~40k characters (~10k tokens) in front of the model; this keeps the prices and
+ * drops most of that, which is the biggest lever on how long the second model step takes.
+ */
+export function clipPage(raw: string, max = SITE_PAGE_CHARS): string {
+  const t = raw.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const headLen = Math.min(1500, Math.floor(max / 3));
+  const parts = [t.slice(0, headLen)];
+  let used = headLen;
+  let covered = headLen;
+  for (const m of t.slice(headLen).matchAll(/[$€£]\s?\d[\d,.]*/g)) {
+    const at = headLen + (m.index ?? 0);
+    if (at < covered) continue; // already inside the previous window
+    const start = Math.max(covered, at - 160);
+    const end = Math.min(t.length, at + 260);
+    if (used + (end - start) > max) break;
+    parts.push(t.slice(start, end));
+    used += end - start;
+    covered = end;
+  }
+  return parts.join(" [...] ") + " [truncated]";
 }
 
 /** Tavily sends "Sun, 30 Jun 2024 00:00:00 GMT"; store and show YYYY-MM-DD. Unparseable -> null. */
@@ -147,7 +175,7 @@ export async function tavilySearch(params: SearchParams, opts: SearchOptions = {
     hits.push({
       title: r.title?.trim() || url,
       url,
-      content: site ? clip(r.raw_content || r.content || "", SITE_PAGE_CHARS) : clip(r.content || "", OPEN_EXCERPT_CHARS),
+      content: site ? clipPage(r.raw_content || r.content || "") : clip(r.content || "", OPEN_EXCERPT_CHARS),
       publishedAt: isoDate(r.published_date),
     });
   }

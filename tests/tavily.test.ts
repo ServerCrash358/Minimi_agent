@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { SearchError, isoDate, normaliseSite, tavilySearch } from "../lib/search/tavily";
+import { SearchError, clipPage, isoDate, normaliseSite, tavilySearch } from "../lib/search/tavily";
 import { cacheGet, cacheSet } from "../lib/search/cache";
 import { setNowOverride } from "../lib/clock";
 import { freshDb } from "./helpers";
@@ -82,4 +82,27 @@ test("cache: same query same day hits; next day misses; empty results are not ca
   assert.deepEqual(cacheGet({ query: "neon pricing", site: "neon.tech" }), hits);
   setNowOverride(Date.UTC(2026, 10, 17, 9));
   assert.equal(cacheGet(p), null, "a price can change overnight: yesterday's result must not be served");
+});
+
+// ---- clipPage: keep the prices, drop the page furniture
+
+test("clipPage: short pages are untouched; long pages keep the top and the later prices, within budget", () => {
+  assert.equal(clipPage("Pro $25 / month"), "Pro $25 / month");
+
+  const nav = "Home Product Docs Blog Sign in Careers Legal Cookies ".repeat(120); // ~6k of furniture
+  const page = `Pricing Free $0 Pro $25 per month Team $599 per month. ${nav} Compute add-on $0.01344 per hour. ${nav} Storage $0.125 per GB. ${nav} Terms apply.`;
+  const out = clipPage(page);
+  assert.ok(out.length <= 4700, `fits the budget (got ${out.length})`);
+  assert.match(out, /Pro \$25 per month/, "the plan table at the top survives");
+  assert.match(out, /Compute add-on \$0\.01344 per hour/, "a price far down the page survives");
+  assert.match(out, /Storage \$0\.125 per GB/);
+  assert.ok(!out.includes("Terms apply"), "trailing furniture is dropped");
+  assert.match(out, /\[truncated\]$/);
+});
+
+test("clipPage never repeats text when price mentions are close together", () => {
+  const dense = "Plan A $10, Plan B $20, Plan C $30, Plan D $40. ".repeat(400);
+  const out = clipPage(dense);
+  assert.ok(out.length <= 4700);
+  assert.ok(out.split("[...]").length >= 1);
 });

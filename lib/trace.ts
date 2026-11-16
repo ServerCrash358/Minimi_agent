@@ -10,6 +10,8 @@ export type SearchTrace = {
   ms: number;
   results: number;
   error?: string;
+  /** A page contained text addressed to AI assistants; it was removed before the model saw it. */
+  flagged?: boolean;
 };
 
 export type Trace = {
@@ -24,7 +26,12 @@ export type Trace = {
   searches: SearchTrace[];
   steps: number;
   usage?: { inputTokens?: number; outputTokens?: number };
-  timings: { memoryMs?: number; firstTokenMs?: number; totalMs?: number };
+  /**
+   * firstTokenMs: first text of any kind (may be a short "let me check" before the searches).
+   * answerStartMs: when the final answer starts streaming, i.e. first text after the last tool result.
+   * It is the number a reader actually waits for; it equals firstTokenMs when no search was needed.
+   */
+  timings: { memoryMs?: number; firstTokenMs?: number; answerStartMs?: number; totalMs?: number };
   /** Size of the "Prior conversations" block sent to the model (0 or undefined: memory not consulted). */
   memoryBlockChars?: number;
   /** The block itself, exactly as the model saw it, so /debug can show what it was working from. */

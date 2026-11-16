@@ -17,7 +17,7 @@ What is a database index and when would I use one?
 
 ## Timing
 
-First token 0.8 s, total 2.7 s, 1 model step(s).
+First token 1.3 s, answer starts 1.3 s, total 2.9 s, 1 model step(s).
 
 ## Searches
 
@@ -25,14 +25,15 @@ None.
 
 ## Answer
 
-A database index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure. 
+A database index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and the use of more storage space to maintain the extra copy of data. Data can be stored only in one order on disk, but with the index, it can be accessed in more than one way.
 
 Indexes are used to quickly locate data without having to search every row in a database table every time a database table is accessed. Indexes can be created using one or more columns of a database table, providing the basis for both rapid random lookups and efficient access of ordered records.
 
-Here are the main reasons to use a database index:
-1. **Speed up queries**: Indexes significantly speed up the execution of queries that filter, sort, or join data based on the indexed columns.
-2. **Enhance performance**: By reducing the amount of data that needs to be scanned, indexes can greatly improve the performance of database operations.
-3. **Optimize data retrieval**: Indexes allow the database engine to quickly locate the rows that match a specific condition, reducing the need for full table scans.
+Here's when you would use a database index:
+- When you need to speed up select queries that filter results based on specific column values.
+- When you want to enforce uniqueness for a column (using a unique index).
+- When you need to improve the performance of join operations between tables.
+- When you want to sort query results efficiently.
 
-However, it's important to note that while indexes can improve read performance, they can also slow down write operations (INSERT, UPDATE, DELETE) because the index needs to be updated whenever data is modified. Therefore, it's crucial to carefully consider the trade-offs and choose the appropriate columns to index based on the specific query patterns and usage of the database.
+In summary, database indexes are essential for optimizing query performance and ensuring efficient data retrieval in large databases.
 

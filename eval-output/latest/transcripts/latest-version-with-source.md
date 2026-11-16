@@ -16,22 +16,22 @@ What is the latest stable version of PostgreSQL?
 
 ## Timing
 
-First token 2.0 s, total 11.7 s, 2 model step(s).
+First token 1.1 s, answer starts 6.1 s, total 7.4 s, 2 model step(s).
 
 ## Searches
 
-- `latest stable version` (site postgresql.org): 3 results, 4039 ms
+- `latest stable version of PostgreSQL` (site postgresql.org): 3 results, 2674 ms
 
 ## Answer
 
-As of 16 November 2026, the latest stable version of PostgreSQL is 19 RC 2, 18.7, 17.12, 16.16, 15.20 and 14.25 [3]. 
+As of 16 November 2026, the latest stable version of PostgreSQL is 18.7 [1][2].
 
-Here is a summary of the latest releases:
-- **18.7** · 2026-11-12 · [Notes](https://www.postgresql.org/docs/18/release-18-7.html)
-- **17.12** · 2026-11-12 · [Notes](https://www.postgresql.org/docs/17/release-17-12.html)
-- **16.16** · 2026-11-12 · [Notes](https://www.postgresql.org/docs/16/release-16-16.html)
-- **15.20** · 2026-11-12 · [Notes](https://www.postgresql.org/docs/15/release-15-20.html)
-- **14.25** · 2026-11-12 · [Notes](https://www.postgresql.org/docs/14/release-14-25.html)
+| Item | Version | Source |
+| --- | --- | --- |
+| Latest stable version | 18.7 | [1][2] |
 
-You can download PostgreSQL from the [download](https://www.postgresql.org/download/) page. PostgreSQL 14 will stop receiving fixes on November 12, 2026. If you are running PostgreSQL 14 in a production environment, we suggest that you make plans to upgrade to a newer, supported version of PostgreSQL. Please see our [versioning policy](https://www.postgresql.org/support/versioning/) for more information.
+[1] https://www.postgresql.org/about/news/postgresql-18-released-3142
+[2] https://www.postgresql.org/
+
+This version was released on November 12, 2026, as part of the announcement for PostgreSQL 18.7, 17.12, 16.16, 15.20, 14.25, and 19 RC 2 [1][2].
 

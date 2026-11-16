@@ -15,6 +15,8 @@ export type SearchToolOutput =
   | {
       query: string;
       cached: boolean;
+      /** Present when page text addressed to AI assistants was removed. */
+      notice?: string;
       results: Array<{ n: number; cite: string; title: string; url: string; date: string | null; excerpt: string }>;
     }
   | { query: string; error: string; results: [] };

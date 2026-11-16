@@ -22,30 +22,25 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 1.5 s, total 11.1 s, 2 model step(s).
+First token 0.8 s, answer starts 8.1 s, total 9.5 s, 2 model step(s).
 
 ## Searches
 
-- `Neon pricing` (site neon.tech): 3 results, 2399 ms
-- `Supabase pricing` (site supabase.com): 3 results, 2920 ms
-- `AWS RDS for PostgreSQL pricing` (site aws.amazon.com): 3 results, 2451 ms
+- `pricing` (site neon.tech): 3 results, 3775 ms
+- `pricing` (site supabase.com): 3 results, 1965 ms
+- `rds postgresql pricing` (site aws.amazon.com): 3 results, 1881 ms
 
 ## Answer
 
-As of 16 November 2026, here are the changes in pricing for managed Postgres hosting since last Tuesday:
+As of 16 November 2026, here are the changes in pricing since 10 November 2026:
 
 | Item | Then (10 Nov 2026) | Now | Verdict | Source |
 | --- | --- | --- | --- | --- |
-| Neon Launch plan price per month | $19 | Usage-based, typical spend: $15/mo | Changed | [1] |
-| Supabase Pro plan price per month | $25 | $25 | Unchanged | [7] |
-| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [4] |
+| Neon Launch plan price per month | $19 | Usage-based, typical spend: $15/mo | Changed | [9] |
+| Supabase Pro plan price per month | $25 | $25 | Unchanged | [5] |
+| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [1] |
 
-Summary: Neon's Launch plan has transitioned to a usage-based model, while Supabase Pro and AWS RDS for PostgreSQL remain unchanged.
-
-Sources:
-[1] Neon pricing - https://neon.tech/pricing
-[7] Supabase pricing - https://supabase.com/pricing
-[4] Amazon RDS for PostgreSQL pricing - https://aws.amazon.com/rds/postgresql/pricing/
+**Summary:** Neon's Launch plan is now usage-based, with a typical spend of $15/month. Supabase Pro and AWS RDS for PostgreSQL remain unchanged.
 
 <details><summary>Memory block the model saw</summary>
 

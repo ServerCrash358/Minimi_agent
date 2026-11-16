@@ -21,6 +21,7 @@ export type CaseResult = {
   answer: string;
   error?: string;
   firstTokenMs?: number;
+  answerStartMs?: number;
   totalMs?: number;
   steps: number;
   searches: SearchTrace[];
@@ -33,7 +34,7 @@ export type EvalReport = {
   startedAt: string;
   tz: string;
   results: CaseResult[];
-  summary: { passed: number; total: number; firstToken: Stats; total_: Stats; avgSearches: number };
+  summary: { passed: number; total: number; firstToken: Stats; answerStart: Stats; total_: Stats; avgSearches: number };
 };
 
 export type Stats = { n: number; mean: number; p50: number; p90: number; max: number };
@@ -154,7 +155,7 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
     const passed = checks.every((x) => x.ok);
     results.push({
       id: c.id, title: c.title, why: c.why, question: c.question, passed, checks, answer, error,
-      firstTokenMs: t.timings.firstTokenMs, totalMs: t.timings.totalMs, steps: t.steps, searches: t.searches, factsStored,
+      firstTokenMs: t.timings.firstTokenMs, answerStartMs: t.timings.answerStartMs, totalMs: t.timings.totalMs, steps: t.steps, searches: t.searches, factsStored,
       memoryBlock: t.memoryBlock,
     });
     log(`    ${passed ? "PASS" : "FAIL"}  first token ${t.timings.firstTokenMs ?? "n/a"} ms, total ${t.timings.totalMs ?? "n/a"} ms, ${t.searches.length} searches${error ? `, error: ${error}` : ""}`);
@@ -171,6 +172,7 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
       passed: results.filter((r) => r.passed).length,
       total: results.length,
       firstToken: stats(ok.map((r) => r.firstTokenMs ?? NaN)),
+      answerStart: stats(ok.map((r) => r.answerStartMs ?? NaN)),
       total_: stats(ok.map((r) => r.totalMs ?? NaN)),
       avgSearches: results.length ? Math.round((results.reduce((a, r) => a + r.searches.length, 0) / results.length) * 10) / 10 : 0,
     },
@@ -189,15 +191,16 @@ export function renderResultsMarkdown(r: EvalReport): string {
     `- Model: \`${r.model}\``,
     `- Run: ${r.startedAt} (timezone ${r.tz})`,
     `- **Passed ${s.passed} of ${s.total}**`,
-    `- Time to first token: median ${sec(s.firstToken.p50)}, p90 ${sec(s.firstToken.p90)}, max ${sec(s.firstToken.max)}`,
+    `- Time to first token (any text): median ${sec(s.firstToken.p50)}, p90 ${sec(s.firstToken.p90)}, max ${sec(s.firstToken.max)}`,
+    `- Time until the answer starts streaming (after any searches): median ${sec(s.answerStart.p50)}, p90 ${sec(s.answerStart.p90)}, max ${sec(s.answerStart.max)}`,
     `- Total time: median ${sec(s.total_.p50)}, p90 ${sec(s.total_.p90)}, max ${sec(s.total_.max)}`,
     `- Searches per answer: ${s.avgSearches} on average`,
     ``,
-    `| Case | Result | First token | Total | Searches | Failed checks |`,
-    `| --- | --- | --- | --- | --- | --- |`,
+    `| Case | Result | First token | Answer starts | Total | Searches | Failed checks |`,
+    `| --- | --- | --- | --- | --- | --- | --- |`,
     ...r.results.map(
       (x) =>
-        `| ${x.title} | ${x.passed ? "pass" : "FAIL"} | ${sec(x.firstTokenMs)} | ${sec(x.totalMs)} | ${x.searches.length} | ${
+        `| ${x.title} | ${x.passed ? "pass" : "FAIL"} | ${sec(x.firstTokenMs)} | ${sec(x.answerStartMs)} | ${sec(x.totalMs)} | ${x.searches.length} | ${
           x.error ? `error: ${x.error}` : x.checks.filter((c) => !c.ok).map((c) => c.name).join("; ") || "none"
         } |`,
     ),
@@ -225,7 +228,7 @@ function transcript(x: CaseResult): string {
     ``,
     `## Timing`,
     ``,
-    `First token ${sec(x.firstTokenMs)}, total ${sec(x.totalMs)}, ${x.steps} model step(s).${x.error ? `  \nError: ${x.error}` : ""}`,
+    `First token ${sec(x.firstTokenMs)}, answer starts ${sec(x.answerStartMs)}, total ${sec(x.totalMs)}, ${x.steps} model step(s).${x.error ? `  \nError: ${x.error}` : ""}`,
     ``,
     `## Searches`,
     ``,

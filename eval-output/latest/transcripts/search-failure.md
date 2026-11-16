@@ -14,7 +14,7 @@ What is the current price of Notion's Plus plan?
 
 ## Timing
 
-First token 1.4 s, total 4.6 s, 2 model step(s).
+First token 0.8 s, answer starts 2.7 s, total 2.9 s, 2 model step(s).
 
 ## Searches
 
@@ -22,5 +22,5 @@ First token 1.4 s, total 4.6 s, 2 model step(s).
 
 ## Answer
 
-I'm sorry, but I was unable to retrieve the current price of Notion's Plus plan due to a timeout error. This means I could not verify this part of your request. Please try again later or check Notion's official website directly for the most accurate and up-to-date pricing information.
+I'm sorry, but I could not verify the current price of Notion's Plus plan due to a search timeout. Please try again later or visit Notion's official website for the most accurate and up-to-date pricing information.
 

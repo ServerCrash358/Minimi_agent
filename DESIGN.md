@@ -14,7 +14,7 @@ One function, `runTurn()` ([lib/agent/run.ts](lib/agent/run.ts)), used by the AP
 
 ## 2. Why: deterministic before the model, judgment inside it
 
-Dates and memory are things code can get exactly right and test: 62 tests cover DST days, a user in Auckland whose "yesterday" is a different UTC day, and ambiguous weekdays. Running them first costs about 5 ms and no round trip, and makes "no record" a fact in the prompt instead of something the model must remember to say. The model keeps what needs judgment: what to search, how to read a page, how to word the diff.
+Dates and memory are things code can get exactly right and test: 68 tests cover DST days, a user in Auckland whose "yesterday" is a different UTC day, and ambiguous weekdays. Running them first costs about 5 ms and no round trip, and makes "no record" a fact in the prompt instead of something the model must remember to say. The model keeps what needs judgment: what to search, how to read a page, how to word the diff.
 
 `site` exists because date filters cannot find pricing pages. Tavily's own docs say continuously updated pages keep their old publish date and are dropped by date filters, so for "has the price changed?" the model reads the vendor's page directly (the body, prices within the first ~2k characters) and uses a dated search only for announcements.
 
@@ -28,11 +28,13 @@ Dates and memory are things code can get exactly right and test: 62 tests cover 
 
 ## 4. Measured
 
-`npm run eval`: 15 cases, live web search, throwaway database, run on Amazon Nova Pro via Bedrock (the only strong model my AWS account could use: Claude there was blocked by a Marketplace payment-method requirement). **14/15 pass. First token: median 1.3 s, p90 1.9 s. Total: median 7.4 s, p90 13.1 s, max 21.4 s** (five CRMs: 10 searches in one parallel step). The one failure: Bedrock's content filter blocked the reply to the prompt-injection page (the provider's guardrail, not the pipeline). On this model the citation and "as of" checks flipped between runs of identical code, so expect a point or two of variance. Full transcripts in `eval-output/latest/`.
+`npm run eval`: 15 cases, live web search, throwaway database, on Amazon Nova Pro via Bedrock. **15/15 pass. Answer starts streaming: median 2.7 s, p90 8.7 s. Total: median 4.0 s, p90 9.9 s, max 10.9 s** (five CRMs: 6 searches in one parallel step, 10.9 s). Cases needing no search start answering in about a second. Full transcripts in `eval-output/latest/`.
 
-What running it changed: a weaker model, told "no conversations stored", still **invented a whole "Then" column** from search results, so the block now ends with an explicit directive and the prompt says "Then" values come only from the block (fixed, tested). Topic matching compared words without stemming and discarded "versions" vs "version" (now scored by the FTS index itself). Models wrote `site:` operators inside the query, which Tavily ignores (now lifted into the parameter). And `max_age_hours`, which I added from the docs for fresher pages, measurably returned *worse* pages, so it was removed.
+The latency came from measurement, not guesswork. An earlier run was 14/15 with median total 7.4 s and the five-CRM case at 21.4 s. Three changes explain the gap: vendor pages are clipped to the top plus windows around prices (five vendors had put ~40k characters in front of the model); the model is told to answer "what did I say?" from memory without searching (it was searching three times for facts already in the block); and replies are asked to be short (output tokens are the other half of step time). One intermediate run scored 13/15 and slower, which is the model varying run to run, so expect a point or two either way.
 
-Not measured: other providers, and answer quality beyond the loose checks. Re-run with your key: `npm run eval -- --model=anthropic:claude-sonnet-5-5`.
+What running it changed in the design: a weaker model, told "no conversations stored", still **invented a whole "Then" column** from search results, so the block now ends with an explicit directive (fixed, tested). Topic matching discarded "versions" vs "version" (now scored by the FTS index itself). Models wrote `site:` operators inside the query, which Tavily ignores (now lifted into the parameter). `max_age_hours`, added from the docs for fresher pages, measurably returned *worse* pages and was removed. A poisoned page made the provider's own filter block the reply, so instruction-like sentences are now stripped from page text before the model sees it. Models leaked `<thinking>` blocks into replies, now stripped before display and storage.
+
+Not measured: other providers, and answer quality beyond the loose checks. Re-run with any key: `npm run eval -- --model=anthropic:claude-sonnet-5-5`.
 
 ## 5. Another week
 

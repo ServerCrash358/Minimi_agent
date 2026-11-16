@@ -26,6 +26,7 @@ import {
 import { renderMemoryBlock } from "../memory/context";
 import { retrieveMemory, summariseMemory } from "../memory/retrieve";
 import { resolveDates } from "../temporal/resolve";
+import { stripThinking } from "../text";
 import { newTrace, type Trace } from "../trace";
 import type { ChatMessage } from "../types";
 import { mainModel } from "./model";
@@ -208,8 +209,11 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
         abortSignal: signal,
         onChunk: ({ chunk }) => {
           touch();
-          if (chunk.type === "text-delta" && trace.timings.firstTokenMs === undefined) {
-            trace.timings.firstTokenMs = Math.round(performance.now() - t0);
+          if (chunk.type === "tool-result") trace.timings.answerStartMs = undefined; // text so far was a preamble
+          if (chunk.type === "text-delta") {
+            const now = Math.round(performance.now() - t0);
+            trace.timings.firstTokenMs ??= now;
+            trace.timings.answerStartMs ??= now;
           }
         },
         onAbort: () => {
@@ -225,7 +229,7 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
           trace.steps = event.steps.length;
           trace.finishReason = String(event.finishReason);
           trace.usage = { inputTokens: event.totalUsage?.inputTokens, outputTokens: event.totalUsage?.outputTokens };
-          const text = event.text.trim();
+          const text = stripThinking(event.text).trim();
           if (!text) {
             const err = new Error("The model returned an empty answer.");
             trace.error = err.message;

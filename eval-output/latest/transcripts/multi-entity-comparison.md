@@ -18,23 +18,28 @@ Compare pricing for Linear, Jira and Asana for a 10-person team.
 
 ## Timing
 
-First token 0.8 s, total 11.2 s, 2 model step(s).
+First token 1.8 s, answer starts 8.3 s, total 9.5 s, 2 model step(s).
 
 ## Searches
 
-- `Linear pricing for 10-person team` (site linear.app): 3 results, 2061 ms
-- `Jira pricing for 10-person team` (site atlassian.com): 3 results, 2240 ms
-- `Asana pricing for 10-person team` (site asana.com): 3 results, 4189 ms
+- `pricing` (site linear.app): 3 results, 3255 ms
+- `Jira pricing` (site atlassian.com): 3 results, 1507 ms
+- `pricing` (site asana.com): 3 results, 3391 ms
 
 ## Answer
 
-As of 16 November 2026, here's a comparison of the pricing for Linear, Jira, and Asana for a 10-person team:
+As of 16 November 2026, here is the pricing comparison for a 10-person team:
 
-| Tool | Pricing for 10-person team |
-| --- | --- |
-| Linear | Free for up to 10 users [1] |
-| Jira | Free for up to 10 users [6] |
-| Asana | Free for up to 10 users [8] |
+| Tool       | Plan          | Monthly Cost  |
+|------------|---------------|---------------|
+| Linear     | Basic         | $100          |
+| Jira       | Standard      | $86           |
+| Asana      | Advanced      | $249.90       |
 
-All three tools offer a free plan that supports up to 10 users. For larger teams or additional features, each tool has different paid plans with varying prices.
+**Notes:**
+- Linear's Basic plan costs $10 per user per month [4].
+- Jira's Standard plan costs $8.60 per user per month for the first 100 users [2].
+- Asana's Advanced plan costs $24.99 per user per month billed annually [7].
+
+This comparison is based on the standard pricing for each tool without any discounts or additional features.
 

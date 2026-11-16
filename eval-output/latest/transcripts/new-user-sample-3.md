@@ -16,49 +16,15 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 1.3 s, total 13.1 s, 2 model step(s).
+First token 1.3 s, answer starts 4.9 s, total 5.8 s, 2 model step(s).
 
 ## Searches
 
-- `Postgres hosting pricing` (since 2026-11-10): 3 results, 1741 ms
+- `Postgres hosting pricing`: 5 results, 1825 ms
 
 ## Answer
 
-<thinking> I have the current pricing for Postgres hosting from multiple sources. However, since there is no past data to compare with, I will present the current pricing information as is. </thinking>
-
-As of 16 November 2026, here are the current pricing plans for Postgres hosting from various providers:
-
-### Bot-Hosting.net
-| Plan | Memory | Storage | CPU | Deployments | Database backup | History | Per month |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Free | 256 MB | 512 MB | 25% | 1 | every hour | 24 h | R$0 |
-| Starter | 1 GB | 5 GB | 50% | 2 | every 15 min | 3 days | R$8.99 |
-| Starter+ | 2 GB | 8 GB | 100% | 4 | every 15 min | 7 days | R$12.99 |
-| Advanced | 4 GB | 15 GB | 200% | 8 | every 15 min | 14 days | R$24.99 |
-| Pro | 8 GB | 25 GB | 250% | 12 | every 15 min | 30 days | R$35.99 |
-| Pro+ | 14 GB | 40 GB | 400% | 25 | every 15 min | 60 days | R$53.99 |
-| Enterprise | 20 GB | 100 GB | 600% | 40 | every 15 min | 90 days | R$89.99 |
-
-### Voroa
-| Plan | CPU / RAM / Storage | Price |
-| --- | --- | --- |
-| DB Nano`pg_nano` | Shared CPU · 256 MB RAM · 100 connections · 1 GB SSD incl. | ₹0/month+18% GST |
-| DB Starter`pg_starter` | 0.5 vCPU, bursts to 1 · 1 GB RAM · 100 connections · 1 GB SSD incl. | ₹299/month+18% GST |
-| DB Basic`pg_basic_1gb` | 1 vCPU, bursts to 2 · 1 GB RAM · 100 connections · 5 GB SSD incl. | ₹499/month+18% GST |
-| DB Standard`pg_standard` | 1 vCPU, bursts to 2 · 2 GB RAM · 100 connections · 10 GB SSD incl. | ₹999/month+18% GST |
-| DB Pro`pg_basic_4gb` | 1 vCPU, bursts to 2 · 4 GB RAM · 100 connections · 10 GB SSD incl. | ₹1,999/month+18% GST |
-| DB Pro Max`pg_basic_256mb` | 2 vCPU, bursts to 4 · 8 GB RAM · 200 connections · 10 GB SSD incl. | ₹3,999/month+18% GST |
-
-### Fastero
-| Provider | Pricing |
-| --- | --- |
-| Neon | Launch: $0.106 per CU-hour and $0.35 per GB-month, typical spend at $15 a month. Scale: $0.222 per CU-hour. |
-| Supabase | 500 MB per project, 2 active projects, auth and APIs included, but paused after a week of low activity and no automatic backups. |
-| Prisma Postgres | 2 GB but counts 200,000 operations a month. |
-| Nile | 1 GB and says "No pauses". |
-| Aiven | 1 GB. |
-
-This information is current as of today, but I cannot compare it with any past data since there is no record of a previous conversation about Postgres hosting on 10 November 2026. If you need more details or have specific questions about these plans, please let me know!
+I have no record of a conversation on Tuesday, 10 November 2026, regarding Postgres hosting. Therefore, I cannot compare the current pricing with any previous pricing. If you provide me with the specific details of the pricing you were interested in last Tuesday, I can check the current pricing for those specific plans and providers.
 
 <details><summary>Memory block the model saw</summary>
 

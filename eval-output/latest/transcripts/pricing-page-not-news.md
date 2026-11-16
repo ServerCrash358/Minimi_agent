@@ -16,23 +16,20 @@ Has Supabase changed its Pro plan price recently?
 
 ## Timing
 
-First token 1.3 s, total 7.4 s, 2 model step(s).
+First token 1.5 s, answer starts 8.8 s, total 9.9 s, 2 model step(s).
 
 ## Searches
 
-- `Supabase Pro plan price` (site supabase.com): 3 results, 1198 ms
-- `Supabase Pro plan price change announcement` (since 2026-10-01): 5 results, 1653 ms
+- `Pro plan pricing` (site supabase.com): 3 results, 4599 ms
+- `Supabase Pro plan price change` (since 2026-11-01): 5 results, 2175 ms
 
 ## Answer
 
-As of 16 November 2026, the Supabase Pro plan is priced at $25 per month [1][4][5][6][7]. This price has not changed recently, as per the information available from various sources [4][5][6][7][8]. The Pro plan includes 100,000 monthly active users, 8 GB of database disk per project, 100 GB of file storage, 250 GB of egress, and $10 of compute credits [1][4][5][6][7]. 
+As of 16 November 2026, the Supabase Pro plan price has not changed recently. The current price is $25 per month, which matches the price from the last time you asked about it on 12 November 2026.
 
-Here's a summary of the findings:
-- **Item**: Supabase Pro plan price
-- **Then (date)**: No prior record
-- **Now**: $25 per month
-- **Verdict**: Unchanged
-- **Source**: [1][4][5][6][7]
+| Item | Then (12 Nov 2026) | Now (16 Nov 2026) | Verdict | Source |
+| --- | --- | --- | --- | --- |
+| Supabase Pro plan price | $25 per month | $25 per month | Unchanged | [1][2][3][4][5] |
 
-If you have any specific date in mind for the last conversation, please let me know, and I can check for any changes since that date.
+Summary: The Supabase Pro plan price remains unchanged at $25 per month.
 

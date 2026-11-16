@@ -1,101 +1,132 @@
 # Minimi chat agent
 
-A chat agent with one tool, `web_search`, built around the idea that most useful questions are about **memory over time**:
-"On Monday we shortlisted 5 CRM tools. Has any of them changed pricing since?", "What did I ask you on 3 November? Is your answer still correct today?"
-It resolves the date, recalls exactly what was said then, re-checks it against the live web, and answers as a diff.
+**A chat agent with live web search that remembers what you asked, and can tell you what has changed since.**
 
-How it works and why it is built this way: [DESIGN.md](DESIGN.md).
+Most "chat with search" demos answer the question in front of them. The questions people actually bring back are about *time*:
+*"On Monday we shortlisted 5 CRM tools. Has any of them changed pricing since?"* or *"What did I ask you on 3 November? Is your answer still correct today?"*
+This agent resolves the date, recalls exactly what it said then, re-checks that against the live web, and answers as a diff.
+
+> **You:** Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+>
+> **Agent:** As of 16 November 2026, here are the changes in pricing since 10 November 2026:
+>
+> | Item | Then (10 Nov 2026) | Now | Verdict | Source |
+> | --- | --- | --- | --- | --- |
+> | Neon Launch plan price per month | $19 | Usage-based, typical spend $15/mo | Changed | [9] |
+> | Supabase Pro plan price per month | $25 | $25 | Unchanged | [5] |
+> | AWS RDS db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [1] |
+>
+> *(A real answer from the eval run, abridged. The "Then" column is quoted from the stored conversation, not reconstructed. With no stored conversation, the agent says it has no record and offers to check the items you name.)*
+
+## What it does
+
+- **Resolves dates the way people mean them.** "Monday", "last Tuesday", "3 November", "last week", `3/11`: computed in the user's own timezone, with every plausible reading kept (this Monday or last, day-first or month-first) rather than guessed.
+- **Recalls the exact earlier answer.** Past turns come back verbatim with their date, sources and the claims they made, across chats, by date, by topic, or both.
+- **Re-checks the live web where change actually happens.** It reads the vendor's own pricing page, because pricing pages are edited in place and date-filtered search silently misses them, and uses dated search for announcements.
+- **Never invents a past.** If nothing was stored, it says so, names the dates it looked at, and mentions the nearest conversations.
+- **Fast and visible.** Answers stream with `[n]` citations, searches run in parallel with live "Searching: …" status, and a debug page shows what the agent did on every turn.
 
 ## Run it
 
-Needs Node 20+. No Docker, no external database (SQLite file in `./data`).
+Needs Node 20+. No Docker, no external database (a SQLite file in `./data`).
 
 ```bash
 npm install
-cp .env.example .env.local   # then add a model key and a Tavily key
+cp .env.example .env.local   # add a model key and a Tavily key
 npm run dev                  # http://localhost:3000
 ```
 
-Keys (all listed in [.env.example](.env.example)):
-
-| Variable | What for |
+| Variable | Purpose |
 | --- | --- |
-| `TAVILY_API_KEY` | Web search. Free tier (1,000 credits a month, no card) at [tavily.com](https://tavily.com). |
-| `MODEL` | `provider:model-id`, one of `anthropic:claude-sonnet-5-5`, `openai:gpt-5`, `google:gemini-3-flash-preview`, `bedrock:us.anthropic.claude-sonnet-5-5`. |
-| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `GOOGLE_GENERATIVE_AI_API_KEY` | Only the key for the provider in `MODEL`. |
+| `TAVILY_API_KEY` | Web search. The free tier (1,000 credits a month, no card) is plenty: [tavily.com](https://tavily.com). |
+| `MODEL` | `provider:model-id`: `anthropic:claude-sonnet-5-5`, `openai:gpt-5`, `google:gemini-3-flash-preview` or `bedrock:us.anthropic.claude-sonnet-4-6`. Swapping provider is an env change, no code. |
+| `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY` | The key for the provider in `MODEL`. |
 | `AWS_BEARER_TOKEN_BEDROCK` (or `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`), `AWS_REGION` | Only for `bedrock:` models. |
-| `EXTRACT_MODEL` | Optional small model for the background fact-extraction job. Defaults to the same provider's small model. |
+| `EXTRACT_MODEL` | Optional small model for background fact extraction (defaults to the same provider's small model). |
 
-If `MODEL` is unset, the first provider with credentials is used. A missing or wrong key shows a readable error in the chat that names the variable.
+A missing or wrong credential produces a readable error in the chat that names what to fix.
 
-## Try the memory features without waiting a week
+## Try the memory features in 30 seconds
 
-1. Open **Debug** (bottom of the sidebar, or `/debug`) and press **Load demo history**. That adds three backdated conversations to your own memory, dated relative to today: a CRM shortlist on the most recent Monday, a Python-version question on 3 November, and a Postgres-hosting comparison last Tuesday. (The prices in them are deliberately a little out of date, so there is something to re-check.)
-2. Start a new chat and ask any of:
+1. Open **Debug** (bottom of the sidebar) and press **Load demo history**. It adds three backdated conversations to your own memory, dated relative to today: a CRM shortlist on the most recent Monday, a Python-version question on 3 November, and a Postgres-hosting comparison last Tuesday.
+2. Start a new chat and ask:
    - *On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?*
    - *What did I ask you on 3 November? Is your answer still correct today?*
    - *Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?*
-3. On a fresh install with no history, the same questions get an honest "I have no record of that" naming the dates it checked, and an offer to do the check if you say what was discussed.
-4. **Pretend today is…** on the same page moves the app's clock forward, so you can ask a real question now, jump a week ahead, and ask about "last Tuesday".
-5. Every turn is traceable on the Debug page: dates resolved, memory retrieved (and the exact block the model saw), searches chosen, and where the time went.
+3. On a fresh install with no history, the same questions get an honest "I have no record of that" instead.
+4. **Pretend today is…** on the Debug page moves the app's clock, so you can ask a real question now, jump a week ahead, and ask about "last Tuesday".
+5. Open any turn on the Debug page to see the dates it resolved, the memory it retrieved (and the exact block the model saw), the searches it chose, and where the time went.
+
+## How it works
+
+```
+message ─► 1 resolve dates ─► 2 retrieve memory ─► 3 assemble context ─► 4 model + web_search ─► 5 stream
+           (user timezone)     (SQLite: date,        (rules, today,         (parallel searches,     with citations
+                                full-text, facts)     "Prior conversations") 5-step cap)
+                                                                                       └─► 6 persist turn + trace ─► 7 extract facts
+```
+
+Steps 1 to 3 are deterministic code (about 5 ms, no model call), so dates and recall are exact and testable. The model handles what needs judgment: what to search and how to word the diff. The reasoning, and what was considered and rejected, is in **[DESIGN.md](DESIGN.md)**.
+
+## Results
+
+`npm run eval` runs 15 cases against the live model and live web search on a throwaway database: the three sample questions, a date with no history, a question needing no search, a multi-entity comparison, an ambiguous "last week", recall across chats, right topic on the wrong day, a timezone edge, prompt injection, a search outage, a current-fact lookup, a pricing-page lookup, and a brand-new user.
+
+**15 of 15 pass** (Amazon Nova Pro on Bedrock). Time until the answer starts streaming: median 2.7 s, p90 8.7 s. Total time: median 4.0 s, p90 9.9 s, max 10.9 s. 1.3 searches per answer on average.
+
+| Case | First token | Answer starts | Total | Searches |
+| --- | --- | --- | --- | --- |
+| Sample 1: five CRM tools shortlisted on Monday | 1.9 s | 8.7 s | 10.9 s | 6 |
+| Sample 2: what did I ask on 3 November, is it still correct | 2.4 s | 4.5 s | 6.0 s | 2 |
+| Sample 3: Postgres hosting asked last Tuesday | 0.8 s | 8.1 s | 9.5 s | 3 |
+| A date with no conversation, for a user who has history | 1.5 s | 1.5 s | 2.3 s | 0 |
+| A question that needs no search | 1.3 s | 1.3 s | 2.9 s | 0 |
+| Multi-entity comparison (Linear, Jira, Asana) | 1.8 s | 8.3 s | 9.5 s | 3 |
+| Ambiguous "last week" | 1.7 s | 1.7 s | 3.1 s | 0 |
+| Recall across chats, no date given | 0.9 s | 0.9 s | 2.9 s | 0 |
+| Right topic, wrong day | 0.9 s | 0.9 s | 4.0 s | 0 |
+| Timezone: the user's "yesterday", not the server's | 2.1 s | 2.1 s | 2.4 s | 0 |
+| Prompt injection inside a search result | 0.8 s | 2.2 s | 2.6 s | 1 |
+| Search tool times out | 0.8 s | 2.7 s | 2.9 s | 1 |
+| Current fact with a source | 1.1 s | 6.1 s | 7.4 s | 1 |
+| Pricing question goes to the vendor's page | 1.5 s | 8.8 s | 9.9 s | 2 |
+| Sample 3 from a brand-new user | 1.3 s | 4.9 s | 5.8 s | 1 |
+
+"First token" is the first text of any kind; "Answer starts" is when the answer itself begins streaming, after any searches, which is what a reader waits for. Questions that need no search start answering in about a second. Full transcripts, including the memory block the model saw and every search, are in [eval-output/latest/transcripts](eval-output/latest/transcripts). Run it yourself with any provider: `npm run eval -- --model=anthropic:claude-sonnet-5-5` (about 35 search credits and 40 model calls). Live runs vary by a point or two between runs, as any model does.
+
+## Engineering notes
+
+- **68 tests, no network or keys needed.** Models and search are scripted, so the suite covers the date resolver (DST days, a user in Auckland whose "yesterday" is a different UTC day, ambiguous weekdays), retrieval, the whole pipeline, error handling and the eval harness itself, including cases that must fail.
+- **Untrusted web content is treated as data.** Sentences addressed to an AI are stripped from search results before the model sees them, with narrow patterns that leave ordinary pages untouched.
+- **Always ends in an answer or a readable error.** A 5-step cap whose last step has tools disabled, an idle and total watchdog, per-search timeouts that are reported rather than hidden, and provider errors translated into what to do about them.
+- **Fast by construction.** Searches run in parallel in one step, vendor pages are clipped to the parts that hold prices, results are cached per query per day (never across a day boundary, when a price may have changed), and fact extraction runs after the response is sent.
+- **Every turn is explainable.** Traces are stored for successful and failed turns alike and rendered on `/debug`.
 
 ## Scripts
 
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Dev server. |
-| `npm test` | 62 unit and pipeline tests. No network, no keys needed (models and search are scripted). |
-| `npm run eval` | 15-question eval against the live model and live web, on a throwaway database. Writes `eval-output/latest/`. `-- --only=id1,id2`, `-- --model=provider:id`, `-- --list`. |
-| `npm run seed [-- <user-id>]` | Same demo history as the Debug button, from the command line. |
-
-## Eval results
-
-Latest full run (`npm run eval`, 15 cases, live web search, throwaway database). Full transcripts, including the memory block the model saw and every search, are in [eval-output/latest/transcripts](eval-output/latest/transcripts).
-
-**Model: Amazon Nova Pro via Bedrock. 14 of 15 pass.** Time to first token: median 1.3 s, p90 1.9 s. Total time: median 7.4 s, p90 13.1 s, max 21.4 s (the five-CRM question: 10 searches in one parallel step). 1.7 searches per answer on average.
-
-I ran this on Nova Pro because it was the only strong model my AWS account could use: Claude on Bedrock was blocked by an AWS Marketplace payment-method requirement. Treat it as a floor and re-run with your own key to compare, e.g. `npm run eval -- --model=anthropic:claude-sonnet-5-5`. A run costs roughly 35 search credits and about 40 model calls.
-
-| Case | Result | First token | Total | Searches |
-| --- | --- | --- | --- | --- |
-| Sample 1: five CRM tools shortlisted on Monday | pass | 1.9 s | 21.4 s | 10 |
-| Sample 2: what did I ask on 3 November, is it still correct | pass | 1.3 s | 9.2 s | 2 |
-| Sample 3: Postgres hosting asked last Tuesday | pass | 1.5 s | 11.1 s | 3 |
-| A date with no conversation, for a user who has history | pass | 0.9 s | 2.4 s | 0 |
-| A question that needs no search | pass | 0.8 s | 2.7 s | 0 |
-| Multi-entity comparison | pass | 0.8 s | 11.2 s | 3 |
-| Ambiguous "last week" | pass | 1.6 s | 4.4 s | 0 |
-| Recall across threads, no date given | pass | 1.3 s | 2.5 s | 0 |
-| Right topic, wrong day | pass | 1.0 s | 10.9 s | 1 |
-| Timezone: the user's "yesterday", not the server's | pass | 1.7 s | 2.1 s | 0 |
-| Prompt injection inside a search result | **fail** | 1.3 s | 3.4 s | 1 |
-| Search tool times out | pass | 1.4 s | 4.6 s | 1 |
-| Current fact with a source | pass | 2.0 s | 11.7 s | 1 |
-| Pricing question goes to the vendor's page | pass | 1.3 s | 7.4 s | 2 |
-| Sample 3 from a brand-new user | pass | 1.3 s | 13.1 s | 1 |
-
-The one failure, honestly: the injection case. Bedrock's content filter blocked Nova's reply to the poisoned page, so the injected instruction was not obeyed but there was no useful answer either. That is the provider's guardrail, not the pipeline. Across the runs I made, the citation and "as of" checks flip occasionally on this model (they failed in one run and passed in the next on identical code), so expect a point or two of variance between runs.
+| `npm test` | The 68 tests. |
+| `npm run eval` | The 15-case eval. Options: `-- --only=id1,id2`, `-- --model=provider:id`, `-- --list`. |
+| `npm run seed [-- <user-id>]` | The demo history from the command line. |
 
 ## Layout
 
 ```
-app/                     Next.js App Router: chat UI, /debug, API routes (chat, threads, debug)
-lib/agent/run.ts         runTurn(): the whole pipeline. Used by the route, the evals and the tests.
+app/                     Next.js App Router: chat UI, /debug, API routes
+lib/agent/run.ts         runTurn(): the whole pipeline, shared by the route, the evals and the tests
 lib/agent/tool.ts        the one tool, web_search
 lib/agent/prompt.ts      system prompt
-lib/agent/model.ts       "provider:model" -> AI SDK model
-lib/temporal/resolve.ts  "Monday", "last Tuesday", "3 November" -> exact day ranges in the user's timezone
-lib/memory/retrieve.ts   date-range + full-text + entity-fact retrieval from SQLite
-lib/memory/context.ts    renders the "Prior conversations" block
-lib/memory/facts.ts      background extraction of (entity, attribute, value, source, as_of)
+lib/agent/model.ts       "provider:model" -> model
+lib/temporal/resolve.ts  "Monday", "last Tuesday", "3 November" -> exact day ranges
+lib/memory/              retrieval (date, full-text, facts), context block, fact extraction
 lib/search/              Tavily client and per-day cache
 lib/db/                  SQLite schema and queries
 lib/eval/                the 15 eval cases and the runner
 tests/                   node:test suites
 ```
 
-## Notes and limits
+## Scope
 
-- Identity is an anonymous cookie. Memory spans chats for the same browser, not across devices. There are no accounts.
-- The demo clock ("Pretend today is…") and the demo-history loader are global to the instance, which is fine for a single-tenant demo and would be removed in a product.
-- Search results are cached per query per day, so repeated questions cost no extra searches, but a price can never be served stale across a day boundary.
+Identity is an anonymous cookie, so memory spans chats on one browser, with no accounts. The demo clock and demo-history loader are global to an instance, which suits a single-tenant demo.

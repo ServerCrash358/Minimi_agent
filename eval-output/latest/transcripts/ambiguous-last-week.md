@@ -16,7 +16,7 @@ What did we discuss last week?
 
 ## Timing
 
-First token 1.6 s, total 4.4 s, 1 model step(s).
+First token 1.7 s, answer starts 1.7 s, total 3.1 s, 1 model step(s).
 
 ## Searches
 
@@ -24,19 +24,17 @@ None.
 
 ## Answer
 
-<thinking> The user is asking about the content of our discussions from last week. I need to refer to the "Prior conversations" block to find the relevant information. The block lists two turns from last week, one on Monday 9 November and another on Tuesday 10 November. I will summarize the content of these turns for the user. </thinking>
-
-Last week, we discussed two main topics:
+Last week, we discussed two topics:
 
 1. **CRM Shortlist for a 20-person Sales Team (9 November 2026):**
    - We shortlisted five CRM tools: HubSpot Sales Hub, Pipedrive, Zoho CRM, Salesforce, and Freshsales.
-   - We compared their pricing per seat per month and discussed why each tool fits a 20-person sales team.
+   - We compared their prices per seat per month and discussed why each tool fits a 20-person sales team.
 
 2. **Managed Postgres Hosting Prices (10 November 2026):**
-   - We compared entry-level managed Postgres hosting options from Neon, Supabase, and AWS RDS.
-   - We looked at the entry-level pricing and noted specific features of each provider.
+   - We compared entry-level managed Postgres hosting options: Neon, Supabase, and AWS RDS.
+   - We looked at their entry-level plans and prices, noting the features and considerations for a small SaaS.
 
-If you need more details on any of these topics, feel free to ask!
+If you need more details on either topic, let me know!
 
 <details><summary>Memory block the model saw</summary>
 

@@ -39,7 +39,7 @@ function Turn({ id, createdAt, ok, trace }: { id: string; createdAt: number; ok:
         <span style={muted}>{new Date(createdAt).toLocaleString()}</span>
         <span className="min-w-0 flex-1 basis-[22ch] truncate">{trace.userText}</span>
         <span style={muted}>
-          first token {ms(trace.timings.firstTokenMs)} · total {ms(trace.timings.totalMs)} · {trace.steps} step{trace.steps === 1 ? "" : "s"} ·{" "}
+          answer starts {ms(trace.timings.answerStartMs)} · total {ms(trace.timings.totalMs)} · {trace.steps} step{trace.steps === 1 ? "" : "s"} ·{" "}
           {trace.searches.length} search{trace.searches.length === 1 ? "" : "es"}
         </span>
       </summary>
@@ -159,7 +159,7 @@ function Turn({ id, createdAt, ok, trace }: { id: string; createdAt: number; ok:
 
         <Section title="4. Timing and model">
           <p style={muted}>
-            {trace.model} · memory {ms(trace.timings.memoryMs)} · first token {ms(trace.timings.firstTokenMs)} · total {ms(trace.timings.totalMs)} · finish: {trace.finishReason ?? "n/a"}
+            {trace.model} · memory {ms(trace.timings.memoryMs)} · first token {ms(trace.timings.firstTokenMs)} · answer starts {ms(trace.timings.answerStartMs)} · total {ms(trace.timings.totalMs)} · finish: {trace.finishReason ?? "n/a"}
             {trace.usage?.inputTokens != null ? ` · ${trace.usage.inputTokens} in / ${trace.usage.outputTokens ?? "?"} out tokens` : ""} · id {id.slice(0, 8)}
           </p>
         </Section>
