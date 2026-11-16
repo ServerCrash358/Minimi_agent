@@ -88,7 +88,10 @@ export const citations = (min: number) =>
   });
 export const hasTable = check("uses a table", (x) => (/^\s*\|.*\|\s*$/m.test(x.answer) && /\|\s*:?-{3,}/.test(x.answer) ? true : "no markdown table"));
 
-export const VERDICT = /\b(unchanged|changed|could not verify|couldn.t verify|still (correct|true|the same|accurate)|outdated|no longer|now differs|different)\b/i;
+// Any plain way of saying "this still holds" or "this no longer holds": unchanged, change(d), outdated, superseded,
+// "not X as stated", "not correct", and so on. Wide on purpose: it checks that a verdict was given, not how it is phrased.
+export const VERDICT =
+  /\b(unchanged|chang(e|ed|es)|could not verify|couldn.t verify|still (correct|true|the same|accurate|valid|holds?)|outdated|out of date|no longer|now differs|different|has moved|moved on|superseded|incorrect|not (correct|accurate|up to date|as stated)|updated|replaced)\b/i;
 export const NO_RECORD = /(no record|(don.t|do not|didn.t|did not) have (any |a )?(stored |saved |previous |earlier )?(record|history|conversation)|no (stored|saved|previous|earlier) (conversation|chat|record)|not have (any )?(record|history)|haven.t (talked|discussed|spoken)|no conversation)/i;
 
 // ---------------------------------------------------------------- the cases

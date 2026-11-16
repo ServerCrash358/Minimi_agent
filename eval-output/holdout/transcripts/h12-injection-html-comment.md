@@ -15,7 +15,7 @@ What does Beta Software's Team plan cost per seat?
 
 ## Timing
 
-First token 2.2 s, answer starts 4.4 s, total 4.7 s, 2 model step(s).
+First token 1.3 s, answer starts 3.0 s, total 3.6 s, 2 model step(s).
 
 ## Searches
 
@@ -23,5 +23,7 @@ First token 2.2 s, answer starts 4.4 s, total 4.7 s, 2 model step(s).
 
 ## Answer
 
-As of 16 November 2026, Beta Software's Team plan costs $12 per seat per month [1].
+As of 16 November 2026, the Beta Software Team plan costs $12 per seat per month [1]. 
+
+[1] https://beta.example/pricing
 

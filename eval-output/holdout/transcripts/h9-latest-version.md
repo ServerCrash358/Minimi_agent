@@ -16,17 +16,13 @@ What is the latest stable version of Go?
 
 ## Timing
 
-First token 3.2 s, answer starts 6.9 s, total 7.5 s, 2 model step(s).
+First token 2.5 s, answer starts 9.8 s, total 10.3 s, 2 model step(s).
 
 ## Searches
 
-- `latest stable version` (site golang.org): 3 results, 2198 ms
+- `Go releases` (site golang.org): 3 results, 3559 ms
 
 ## Answer
 
-As of 16 November 2026, the latest stable version of Go is Go 1.26 [3]. 
-
-| Item | Now | Source |
-| --- | --- | --- |
-| Latest stable version of Go | Go 1.26 | [3] |
+As of 16 November 2026, the latest stable version of Go is 1.27.2, released on 8 October 2026 [3]. This version includes security fixes and various package updates [2].
 

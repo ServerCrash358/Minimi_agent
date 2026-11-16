@@ -11,3 +11,4 @@ eval-output/*.tmp.db*
 eval-run.log
 _*.ts
 eval-output/partial
+eval-output/.search-cache.json

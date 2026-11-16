@@ -123,7 +123,20 @@ function Turn({ id, createdAt, ok, trace }: { id: string; createdAt: number; ok:
           ) : null}
         </Section>
 
-        <Section title="3. Searches the model chose">
+        <Section title="3. Decision made in code before the model ran">
+          {trace.intent ? (
+            <p>
+              <strong>{trace.intent.kind}</strong>
+              <span style={muted}> · {trace.intent.reason}</span>
+              {trace.intent.kind === "recall" || trace.intent.kind === "conceptual" ? <span style={muted}> · web search was not offered to the model</span> : null}
+              {trace.prefetch ? <span style={muted}> · {trace.prefetch.planned} searches started by the pipeline in {ms(trace.prefetch.ms)}, before the model ran</span> : null}
+            </p>
+          ) : (
+            <p style={muted}>Not recorded (this turn predates the intent step).</p>
+          )}
+        </Section>
+
+        <Section title="4. Searches">
           {trace.searches.length ? (
             <table className="w-full text-left">
               <thead style={muted}>
@@ -141,6 +154,8 @@ function Turn({ id, createdAt, ok, trace }: { id: string; createdAt: number; ok:
                   <tr key={i} className="align-top">
                     <td className="pr-3">
                       {s.query}
+                      <span style={muted}> · {s.prefetched ? "pipeline" : "model"}</span>
+                      {s.flagged ? <span style={{ color: "var(--bad)" }}> (instruction-like text removed)</span> : null}
                       {s.error ? <span style={{ color: "var(--bad)" }}> ({s.error})</span> : null}
                     </td>
                     <td className="pr-3">{s.site ?? "web"}</td>
@@ -157,7 +172,22 @@ function Turn({ id, createdAt, ok, trace }: { id: string; createdAt: number; ok:
           )}
         </Section>
 
-        <Section title="4. Timing and model">
+        <Section title="5. Answer check">
+          {trace.guard ? (
+            trace.guard.defects.length ? (
+              <p>
+                <strong>{trace.guard.repaired ? "Rewritten once" : "Problems found, draft kept"}</strong>
+                <span style={muted}> · {trace.guard.defects.join(" ")}</span>
+              </p>
+            ) : (
+              <p style={muted}>The draft passed every form check (citations, date, table, not empty). No rewrite.</p>
+            )
+          ) : (
+            <p style={muted}>Not recorded.</p>
+          )}
+        </Section>
+
+        <Section title="6. Timing and model">
           <p style={muted}>
             {trace.model} · memory {ms(trace.timings.memoryMs)} · first token {ms(trace.timings.firstTokenMs)} · answer starts {ms(trace.timings.answerStartMs)} · total {ms(trace.timings.totalMs)} · finish: {trace.finishReason ?? "n/a"}
             {trace.usage?.inputTokens != null ? ` · ${trace.usage.inputTokens} in / ${trace.usage.outputTokens ?? "?"} out tokens` : ""} · id {id.slice(0, 8)}

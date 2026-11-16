@@ -16,13 +16,13 @@ What is the latest stable version of PostgreSQL?
 
 ## Timing
 
-First token 0.9 s, answer starts 4.9 s, total 5.2 s, 2 model step(s).
+First token 2.9 s, answer starts 9.9 s, total 10.5 s, 2 model step(s).
 
 ## Searches
 
-- `latest stable version` (site postgresql.org): 3 results, 2640 ms
+- `latest stable version` (site postgresql.org): 3 results, 3036 ms
 
 ## Answer
 
-As of 16 November 2026, the latest stable version of PostgreSQL is 18.7, released on November 12, 2026 [3].
+As of 16 November 2026, the latest stable version of PostgreSQL is PostgreSQL 18.7, as indicated by the release announcement on the official PostgreSQL website [3]. This version was released on November 12, 2026, alongside updates for other supported versions and a release candidate for PostgreSQL 19 [2].
 

@@ -1,8 +1,10 @@
-// npm run eval [-- --suite=core|holdout|all] [--only=id1,id2] [--model=provider:model] [--list]
+// npm run eval [-- --suite=core|holdout|accuracy|all] [--only=id1,id2] [--model=provider:model] [--no-cache] [--list]
 //
 // Runs an eval suite against the live model and live web search, on a throwaway database.
-//   core     the three sample questions and the cases written alongside them  -> eval-output/core/
-//   holdout  new questions of the same kinds, written after tuning            -> eval-output/holdout/
+//   core      the three sample questions and the cases written alongside them  -> eval-output/core/
+//   holdout   new questions of the same kinds, written after tuning            -> eval-output/holdout/
+//   accuracy  canned vendor pages with known prices: is every verdict right?   -> eval-output/accuracy/ (no search credits)
+// Live search results are cached in eval-output/.search-cache.json for the rest of the day (--no-cache to disable).
 // A run restricted with --only writes to eval-output/partial/ so it can never replace a full report.
 // Exits 1 if any case fails, and 2 if no case got an answer at all (nothing was measured, nothing is overwritten).
 import path from "node:path";
@@ -17,10 +19,12 @@ const wanted = (arg("suite") ?? "core") as Suite["id"] | "all";
 const suiteIds = wanted === "all" ? (Object.keys(SUITES) as Suite["id"][]) : [wanted];
 for (const id of suiteIds) {
   if (!SUITES[id]) {
-    console.error(`Unknown suite "${id}". Use core, holdout or all.`);
+    console.error(`Unknown suite "${id}". Use core, holdout, accuracy or all.`);
     process.exit(2);
   }
 }
+// Live search results are kept between runs (same day only), so a rerun costs no search credits.
+const cacheFile = process.argv.includes("--no-cache") ? undefined : path.resolve("eval-output/.search-cache.json");
 
 if (process.argv.includes("--list")) {
   for (const id of suiteIds) {
@@ -40,7 +44,7 @@ const only = arg("only")?.split(",").map((s) => s.trim()).filter(Boolean);
 let worst = 0;
 for (const id of suiteIds) {
   console.log(`\nRunning ${SUITES[id].title} with MODEL=${process.env.MODEL ?? "(auto)"} ...\n`);
-  const report = await runEval({ suite: id, only, log: (l) => console.log(l) });
+  const report = await runEval({ suite: id, only, cacheFile, log: (l) => console.log(l) });
   console.log("\n" + renderResultsMarkdown(report));
 
   // A run where the model never answered (bad key, no access, outage) measures nothing. Do not let it replace the

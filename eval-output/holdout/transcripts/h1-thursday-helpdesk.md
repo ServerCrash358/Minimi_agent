@@ -18,37 +18,33 @@ On Thursday we shortlisted 4 helpdesk tools for a 12-person support team. Has an
 
 ## Timing
 
-First token 1.4 s, answer starts 14.3 s, total 18.0 s, 2 model step(s).
+First token 4.1 s, answer starts 11.7 s, total 14.2 s, 2 model step(s).
 
 ## Searches
 
-- `Zendesk pricing` (site zendesk.com): 3 results, 2948 ms
-- `Freshdesk pricing` (site freshworks.com): 3 results, 2327 ms
-- `Help Scout pricing` (site helpscout.com): 3 results, 4260 ms
-- `Intercom pricing` (site intercom.com): 3 results, 5106 ms
-- `Zendesk announcements since 2026-11-12`: 5 results, 2974 ms
-- `Freshdesk announcements since 2026-11-12`: 5 results, 2371 ms
-- `Help Scout announcements since 2026-11-12`: 5 results, 2386 ms
-- `Intercom announcements since 2026-11-12`: 5 results, 2325 ms
+- `Zendesk pricing plans` (site zendesk.com): 3 results, 1 ms, cached
+- `Freshdesk pricing plans` (site freshworks.com): 3 results, 0 ms, cached
+- `Help Scout pricing plans` (site helpscout.com): 3 results, 1 ms, cached
+- `Intercom pricing plans` (site intercom.com): 3 results, 1 ms, cached
+- `TypeScript latest stable release` (site typescriptlang.org): 3 results, 0 ms, cached
+- `Zendesk, Freshdesk, Help Scout, Intercom, TypeScript pricing changes and new announcements` (since 2026-11-05): 2 results, 0 ms, cached
+- `Zendesk pricing changes since 2026-11-12` (since 2026-11-12): 4 results, 2702 ms
+- `Freshdesk pricing changes since 2026-11-12` (since 2026-11-12): 2 results, 2374 ms
+- `Help Scout pricing changes since 2026-11-12` (since 2026-11-12): 5 results, 2435 ms
+- `Intercom pricing changes since 2026-11-12` (since 2026-11-12): 5 results, 2342 ms
 
 ## Answer
 
-As of 16 November 2026, here is the comparison of pricing and major announcements since 12 November 2026 for Zendesk, Freshdesk, Help Scout, and Intercom:
+As of 16 November 2026, here are the changes for Zendesk, Freshdesk, Help Scout, and Intercom since 12 November 2026:
 
 | Tool | Then (12 Nov 2026) | Now | Verdict | Source |
 | --- | --- | --- | --- | --- |
-| Zendesk | Suite Team: $55/agent/month | Suite Team: $55/agent/month (annual), $69/agent/month (monthly) | Unchanged | [19][21] |
-| Freshdesk | Pro: $49/agent/month | Pro: $79/agent/month | Changed | [1][2] |
-| Help Scout | Standard: $50/user/month | Standard: $25/user/month | Changed | [27][29] |
-| Intercom | Essential: $29/seat/month | Essential: $19/seat/month | Changed | [30][31] |
+| Zendesk | Suite Team: $55/agent/month, Pro: $49/agent/month, Standard: $50/user/month, Essential: $29/seat/month | Suite Team: $69/agent/month, Pro: $66/agent/month, Standard: $45/user/month, Essential: $19/seat/month | Changed | [1][2][3][10] |
+| Freshdesk | Pro: $49/agent/month | Pro: $66/agent/month | Changed | [4][5][6] |
+| Help Scout | Standard: $50/user/month | Standard: $25/user/month | Changed | [7][8][9] |
+| Intercom | Essential: $29/seat/month | Essential: $19/seat/month | Changed | [10][11][12] |
 
-### Summary of Changes:
-- **Zendesk**: Pricing remains unchanged. Recent announcements include support for Jira Data Center 11.3 LTS and improvements to AI agents and Copilot [22][23][24][25].
-- **Freshdesk**: Pro plan price increased from $49 to $79 per agent per month. Recent updates include enhancements to contact views and the introduction of Voice AI Agents [9][10][11][12].
-- **Help Scout**: Standard plan price decreased from $50 to $25 per user per month. Recent updates include support for Next Response Time goals and SMS integration [15][17][18].
-- **Intercom**: Essential plan price decreased from $29 to $19 per seat per month. Recent announcements include the introduction of Fin 4 and updates to the Fin AI Agent [4][5][7][8].
-
-For detailed pricing and features, please refer to the respective tool's pricing page.
+Summary: All four tools have changed their pricing since 12 November 2026. Zendesk, Freshdesk, and Intercom have increased their prices, while Help Scout has decreased its price.
 
 <details><summary>Memory block the model saw</summary>
 

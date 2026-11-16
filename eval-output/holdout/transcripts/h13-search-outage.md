@@ -14,13 +14,13 @@ What is the current price of Slack Pro per user?
 
 ## Timing
 
-First token 3.3 s, answer starts 7.0 s, total 7.3 s, 2 model step(s).
+First token 0.9 s, answer starts 2.4 s, total 3.2 s, 2 model step(s).
 
 ## Searches
 
-- `Slack Pro pricing per user` (site slack.com): 0 results, 1 ms, ERROR The search timed out.
+- `Slack Pro pricing per user` (site slack.com): 0 results, 0 ms, ERROR The search timed out.
 
 ## Answer
 
-I'm sorry, but I was unable to retrieve the current price of Slack Pro per user due to a search timeout. Please try again later or visit Slack's official website directly for the most up-to-date pricing information.
+I'm sorry, but I was unable to retrieve the current price of Slack Pro per user due to a search timeout. Please try again later or visit the official Slack pricing page directly for the most accurate information.
 

@@ -18,25 +18,28 @@ Compare pricing for Notion, Coda and Airtable for a 15-person team.
 
 ## Timing
 
-First token 0.8 s, answer starts 5.0 s, total 6.5 s, 2 model step(s).
+First token 2.7 s, answer starts 8.5 s, total 10.2 s, 2 model step(s).
 
 ## Searches
 
-- `pricing` (site notion.so): 3 results, 1719 ms
-- `pricing` (site coda.io): 3 results, 480 ms
-- `pricing` (site airtable.com): 3 results, 1441 ms
+- `pricing` (site notion.so): 3 results, 1 ms, cached
+- `pricing` (site coda.io): 3 results, 0 ms, cached
+- `pricing` (site airtable.com): 3 results, 0 ms, cached
 
 ## Answer
 
-As of 16 November 2026, here are the pricing details for Notion, Coda, and Airtable for a 15-person team:
+As of 16 November 2026, here is the pricing comparison for Notion, Coda, and Airtable for a 15-person team:
 
-| Tool | Plan | Cost per Month |
-| --- | --- | --- |
-| Notion | Business | $300 ($20 per member x 15) |
-| Coda | Pro | $180 ($12 per Doc Maker x 15) |
-| Airtable | Team | $300 ($20 per user x 15) |
+| Service | Plan Type | Cost per User per Month | Total Cost for 15 Users per Month |
+|---------|-----------|--------------------------|------------------------------------|
+| Notion  | Business  | $12                      | $180                               |
+| Coda    | Pro       | $10                      | $150                               |
+| Airtable| Business  | $45                      | $675                               |
 
-**Summary:** Notion and Airtable have the same cost for a 15-person team at $300 per month, while Coda is slightly cheaper at $180 per month. Notion charges per member, Coda charges per Doc Maker, and Airtable charges per user with edit permissions. 
+**Summary:** Notion is the most affordable option at $180 per month, followed by Coda at $150 per month. Airtable is the most expensive at $675 per month.
 
-[7][9][2][3][5][6]
+**Notes:**
+- Notion's Business plan costs $12 per user per month [2].
+- Coda's Pro plan costs $10 per user per month [5].
+- Airtable's Business plan costs $45 per user per month [9].
 

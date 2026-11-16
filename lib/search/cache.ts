@@ -13,6 +13,21 @@ function key(p: SearchParams): string {
   return createHash("sha1").update(norm).digest("hex");
 }
 
+export type CacheRow = { key: string; created_at: number; json: string };
+
+/** Dump the cache so an eval run can keep it between runs (same-day entries only ever hit; older ones are pruned). */
+export function exportSearchCache(): CacheRow[] {
+  return db().prepare("SELECT key, created_at, json FROM search_cache").all() as CacheRow[];
+}
+
+export function importSearchCache(rows: CacheRow[]) {
+  const stmt = db().prepare("INSERT OR REPLACE INTO search_cache(key, created_at, json) VALUES (?,?,?)");
+  const keep = nowMs() - 3 * 86_400_000;
+  db().transaction(() => {
+    for (const r of rows) if (r.created_at >= keep) stmt.run(r.key, r.created_at, r.json);
+  })();
+}
+
 export function cacheGet(p: SearchParams): SearchHit[] | null {
   const row = db().prepare("SELECT json FROM search_cache WHERE key = ?").get(key(p)) as { json: string } | undefined;
   return row ? (JSON.parse(row.json) as SearchHit[]) : null;

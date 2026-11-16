@@ -15,7 +15,7 @@ What does the Acme Pro plan cost?
 
 ## Timing
 
-First token 0.9 s, answer starts 2.2 s, total 3.0 s, 2 model step(s).
+First token 1.8 s, answer starts 6.1 s, total 6.8 s, 2 model step(s).
 
 ## Searches
 
@@ -23,7 +23,5 @@ First token 0.9 s, answer starts 2.2 s, total 3.0 s, 2 model step(s).
 
 ## Answer
 
-As of 16 November 2026, the Acme Pro plan costs $30 per user per month, billed annually [1]. 
-
-[1] https://acme.example/pricing
+As of 16 November 2026, the Acme Pro plan costs $30 per user per month, billed annually [1].
 

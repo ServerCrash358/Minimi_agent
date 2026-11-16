@@ -1,0 +1,486 @@
+{
+  "suite": "accuracy",
+  "suiteTitle": "Accuracy suite (canned vendor pages with known prices: is every verdict right?)",
+  "model": "bedrock:us.amazon.nova-pro-v1:0",
+  "startedAt": "2026-11-16T15:18:18.647Z",
+  "tz": "Asia/Calcutta",
+  "results": [
+    {
+      "id": "a1-postgres-one-changed",
+      "title": "Postgres: Neon changed, Supabase and RDS did not",
+      "why": "The diff must name the one price that moved and leave the others alone.",
+      "question": "Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?",
+      "passed": true,
+      "checks": [
+        {
+          "name": "produced an answer",
+          "ok": true
+        },
+        {
+          "name": "recalled the \"postgres\" conversation (Tue 10 Nov 2026)",
+          "ok": true
+        },
+        {
+          "name": "Neon: changed",
+          "ok": true
+        },
+        {
+          "name": "Supabase: unchanged",
+          "ok": true
+        },
+        {
+          "name": "RDS: unchanged",
+          "ok": true
+        }
+      ],
+      "answer": "As of 16 November 2026, here is the comparison of Postgres hosting pricing since last Tuesday:\n\n| Item | Then (10 Nov 2026) | Now (16 Nov 2026) | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Neon Launch plan price per month | $19 | Usage-based with a $0 monthly minimum | Changed | [1] |\n| Supabase Pro plan price per month | $25 | $25 | Unchanged | [2] |\n| AWS RDS db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [3] |\n\nSummary: Neon's Launch plan pricing has changed to usage-based with a $0 monthly minimum. Supabase and AWS RDS pricing remain unchanged. \n\n[1] Neon pricing - https://neon.tech/pricing\n[2] Supabase pricing - https://supabase.com/pricing\n[3] Amazon RDS for PostgreSQL pricing - https://aws.amazon.com/rds/postgresql/pricing/\n[4] Industry news - https://news.example/roundup",
+      "firstTokenMs": 902,
+      "answerStartMs": 2895,
+      "totalMs": 5553,
+      "steps": 2,
+      "searches": [
+        {
+          "query": "Neon pricing plans",
+          "site": "neon.tech",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Supabase pricing plans",
+          "site": "supabase.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "AWS RDS for PostgreSQL pricing plans",
+          "site": "aws.amazon.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Neon, Supabase, AWS RDS for PostgreSQL pricing changes and new announcements",
+          "since": "2026-11-10",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Neon, Supabase, AWS RDS for PostgreSQL pricing changes and new announcements",
+          "since": "2026-11-10",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        }
+      ],
+      "factsStored": 0
+    },
+    {
+      "id": "a2-crm-one-changed-one-unverifiable",
+      "title": "CRM: HubSpot changed, three unchanged, one page failed to load",
+      "why": "Five items, three different truths. A failed page must be reported as unverified, not guessed at.",
+      "question": "On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?",
+      "passed": true,
+      "checks": [
+        {
+          "name": "produced an answer",
+          "ok": true
+        },
+        {
+          "name": "recalled the \"crm\" conversation (Mon 9 Nov 2026)",
+          "ok": true
+        },
+        {
+          "name": "HubSpot: changed",
+          "ok": true
+        },
+        {
+          "name": "Pipedrive: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Zoho: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Salesforce: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Freshsales: unverified",
+          "ok": true
+        }
+      ],
+      "answer": "As of 16 November 2026, here is the comparison of CRM tool pricing and major announcements since the shortlist on 9 November 2026:\n\n| Item | Then (9 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| HubSpot Sales Hub Starter price per seat per month | $20 | $30 | Changed | [1] |\n| Pipedrive Advanced price per seat per month | $34 | $34 | Unchanged | [2] |\n| Zoho CRM Professional price per user per month | $23 | $23 | Unchanged | [3] |\n| Salesforce Starter Suite price per user per month | $25 | $25 | Unchanged | [4] |\n| Freshsales Growth price per seat per month | $11 | Could not verify | Could not verify | - |\n| Major announcements since 9 Nov 2026 | None | None | No new announcements | [5] |\n\nSummary: HubSpot Sales Hub Starter price has increased from $20 to $30 per seat per month. Other CRM tools' prices remain unchanged. No major announcements were found for any of the CRMs since 9 November 2026. Freshsales pricing could not be verified again, and the managed vector databases (Pinecone, Qdrant Cloud, Weaviate Cloud) also could not be verified.",
+      "firstTokenMs": 1123,
+      "answerStartMs": 3440,
+      "totalMs": 6152,
+      "steps": 2,
+      "searches": [
+        {
+          "query": "HubSpot Sales Hub pricing plans",
+          "site": "hubspot.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Pipedrive pricing plans",
+          "site": "pipedrive.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Zoho CRM pricing plans",
+          "site": "zoho.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Salesforce Sales pricing plans",
+          "site": "salesforce.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Freshsales pricing plans",
+          "site": "freshworks.com",
+          "cached": false,
+          "ms": 0,
+          "results": 0,
+          "prefetched": true,
+          "error": "The search timed out."
+        },
+        {
+          "query": "Pinecone pricing plans",
+          "site": "pinecone.io",
+          "cached": false,
+          "ms": 0,
+          "results": 0,
+          "prefetched": true
+        },
+        {
+          "query": "HubSpot Sales Hub, Pipedrive, Zoho CRM, Salesforce Sales, Freshsales pricing changes and new announcements",
+          "since": "2026-11-02",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Freshsales pricing plans",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        },
+        {
+          "query": "HubSpot Sales Hub, Pipedrive, Zoho CRM, Salesforce Sales, Freshsales pricing changes and new announcements",
+          "since": "2026-11-09",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        }
+      ],
+      "factsStored": 0
+    },
+    {
+      "id": "a3-python-version-moved-on",
+      "title": "Python: the latest stable version has moved on",
+      "why": "'Is your answer still correct?' when it is not: the old claim must be restated and marked changed, with the new version.",
+      "question": "What did I ask you on 3 November? Is your answer still correct today?",
+      "passed": true,
+      "checks": [
+        {
+          "name": "produced an answer",
+          "ok": true
+        },
+        {
+          "name": "recalled the \"python\" conversation (Tue 3 Nov 2026)",
+          "ok": true
+        },
+        {
+          "name": "restates the old claim (3.14)",
+          "ok": true
+        },
+        {
+          "name": "reports the new version (3.15)",
+          "ok": true
+        },
+        {
+          "name": "says it is no longer correct",
+          "ok": true
+        }
+      ],
+      "answer": "The user asked: \"What is the latest stable Python version, and when does it reach end of life?\"\n\nMy answer on 3 November 2026 was:\nAs of 3 November 2026, the latest stable release is Python 3.14 [1]. It is supported with bug fixes until October 2027 and security fixes until October 2030 [1].\n\n**Verification against today's data:**\n\n| Item | Then (3 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Latest stable Python version | 3.14 | 3.15 | Changed | [1] |\n| End of security support for Python 3.14 | October 2030 | Not found | Changed | [1] |\n\nSummary: The latest stable Python version has changed from 3.14 to 3.15. The end of security support date for Python 3.14 could not be verified as it is no longer listed on the Python dev guide.\n\nSources:\n[1] Python status of versions (https://devguide.python.org/versions/)\n\nAs of 16 November 2026, the latest stable Python version is 3.15, and the end of security support date for Python 3.14 could not be verified.",
+      "firstTokenMs": 900,
+      "answerStartMs": 2566,
+      "totalMs": 5802,
+      "steps": 2,
+      "searches": [
+        {
+          "query": "Python latest stable release",
+          "site": "devguide.python.org",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Python new release announcements",
+          "since": "2026-11-03",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Python latest stable release",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        },
+        {
+          "query": "Python new release announcements",
+          "since": "2026-11-03",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        }
+      ],
+      "factsStored": 0
+    },
+    {
+      "id": "a4-helpdesk-one-changed",
+      "title": "Helpdesk: Intercom changed, the other three did not",
+      "why": "Held-out topic and weekday; one price up, three the same.",
+      "question": "On Thursday we shortlisted 4 helpdesk tools for a 12-person support team. Has any of them changed pricing or launched something big since?",
+      "passed": true,
+      "checks": [
+        {
+          "name": "produced an answer",
+          "ok": true
+        },
+        {
+          "name": "recalled the \"helpdesk\" conversation (Thu 12 Nov 2026)",
+          "ok": true
+        },
+        {
+          "name": "Zendesk: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Freshdesk: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Help Scout: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Intercom: changed",
+          "ok": true
+        }
+      ],
+      "answer": "As of 16 November 2026, here is the comparison of the helpdesk tools' pricing since the shortlist on 12 November 2026:\n\n| Tool | Then (12 Nov 2026) | Now (16 Nov 2026) | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Zendesk | $55 per agent per month | $55 per agent per month | Unchanged | [1] |\n| Freshdesk | $49 per agent per month | $49 per agent per month | Unchanged | [2] |\n| Help Scout | $50 per user per month | $50 per user per month | Unchanged | [3] |\n| Intercom | $29 per seat per month | $39 per seat per month | Changed | [4] |\n\nSummary: Intercom's Essential plan price per seat per month has increased from $29 to $39. The other tools' pricing remains unchanged.\n\n[1] Zendesk pricing - https://www.zendesk.com/pricing/\n[2] Freshdesk pricing - https://www.freshworks.com/freshdesk/pricing/\n[3] Help Scout pricing - https://www.helpscout.com/pricing/\n[4] Intercom pricing - https://www.intercom.com/pricing\n[5] Industry news - https://news.example/roundup",
+      "firstTokenMs": 2553,
+      "answerStartMs": 6497,
+      "totalMs": 9620,
+      "steps": 2,
+      "searches": [
+        {
+          "query": "Zendesk pricing plans",
+          "site": "zendesk.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Freshdesk pricing plans",
+          "site": "freshworks.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Help Scout pricing plans",
+          "site": "helpscout.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Intercom pricing plans",
+          "site": "intercom.com",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "TypeScript latest stable release",
+          "site": "typescriptlang.org",
+          "cached": false,
+          "ms": 0,
+          "results": 0,
+          "prefetched": true
+        },
+        {
+          "query": "Zendesk, Freshdesk, Help Scout, Intercom, TypeScript pricing changes and new announcements",
+          "since": "2026-11-05",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Zendesk, Freshdesk, Help Scout, Intercom pricing changes and new announcements",
+          "since": "2026-11-12",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        }
+      ],
+      "factsStored": 0
+    },
+    {
+      "id": "a5-vectordb-free-tier-grew",
+      "title": "Vector databases: Qdrant's free tier changed, the others did not",
+      "why": "A change that is not a price: the free cluster grew. 'Two weeks ago' is a date range, and the TypeScript chat inside that range must not pull in an irrelevant check.",
+      "question": "Two weeks ago I asked you about vector database hosting. Has any pricing changed since then?",
+      "passed": true,
+      "checks": [
+        {
+          "name": "produced an answer",
+          "ok": true
+        },
+        {
+          "name": "recalled the \"vectordb\" conversation (Mon 2 Nov 2026)",
+          "ok": true
+        },
+        {
+          "name": "Pinecone: unchanged",
+          "ok": true
+        },
+        {
+          "name": "Qdrant: changed",
+          "ok": true
+        },
+        {
+          "name": "Weaviate: unchanged",
+          "ok": true
+        },
+        {
+          "name": "does not drag in the unrelated TypeScript chat",
+          "ok": true
+        }
+      ],
+      "answer": "As of 16 November 2026, the pricing for Pinecone, Qdrant Cloud, and Weaviate Cloud has not changed since the user's previous inquiry two weeks ago.\n\n| Item | Then (2 November 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Pinecone Standard plan minimum per month | $50 | $50 | Unchanged | [1] |\n| Qdrant Cloud free cluster size | 1 GB | 4 GB | Changed | [2] |\n| Weaviate Cloud Flex plan starting price per month | $45 | $45 | Unchanged | [3] |\n\n[1] Pinecone pricing - https://www.pinecone.io/pricing/\n[2] Qdrant Cloud pricing - https://qdrant.tech/pricing/\n[3] Weaviate Cloud pricing - https://weaviate.io/pricing\n[4] Industry news - https://news.example/roundup\n\nThe Qdrant Cloud free cluster size has changed from 1 GB to 4 GB, while the pricing for Pinecone and Weaviate Cloud remains unchanged.",
+      "firstTokenMs": 1420,
+      "answerStartMs": 3584,
+      "totalMs": 5826,
+      "steps": 2,
+      "searches": [
+        {
+          "query": "Pinecone pricing plans",
+          "site": "pinecone.io",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Qdrant Cloud latest stable release",
+          "site": "qdrant.tech",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Weaviate Cloud pricing plans",
+          "site": "weaviate.io",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Pinecone, Qdrant Cloud, Weaviate Cloud pricing changes and new announcements",
+          "since": "2026-11-02",
+          "cached": false,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
+        },
+        {
+          "query": "Pinecone pricing plans",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        },
+        {
+          "query": "Qdrant Cloud latest stable release",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        },
+        {
+          "query": "Weaviate Cloud pricing plans",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        },
+        {
+          "query": "Pinecone, Qdrant Cloud, Weaviate Cloud pricing changes and new announcements",
+          "since": "2026-11-02",
+          "cached": false,
+          "ms": 0,
+          "results": 1
+        }
+      ],
+      "factsStored": 0
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "total": 5,
+    "firstToken": {
+      "n": 5,
+      "mean": 1380,
+      "p50": 1123,
+      "p90": 2553,
+      "max": 2553
+    },
+    "answerStart": {
+      "n": 5,
+      "mean": 3796,
+      "p50": 3440,
+      "p90": 6497,
+      "max": 6497
+    },
+    "total_": {
+      "n": 5,
+      "mean": 6591,
+      "p50": 5826,
+      "p90": 9620,
+      "max": 9620
+    },
+    "avgSearches": 6.6
+  }
+}

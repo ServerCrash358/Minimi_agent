@@ -16,38 +16,38 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 0.9 s, answer starts 7.9 s, total 13.1 s, 2 model step(s).
+First token 2.5 s, answer starts 6.4 s, total 10.2 s, 2 model step(s).
 
 ## Searches
 
-- `Postgres hosting pricing` (since 2026-11-10): 3 results, 1897 ms
+- `Postgres hosting pricing` (since 2026-11-10): 3 results, 1 ms, cached
 
 ## Answer
 
-As of 16 November 2026, here are the current pricing plans for Postgres hosting from two providers:
+I have no record of a conversation about Postgres hosting on Tuesday, 10 November 2026. Therefore, I cannot provide a comparison with any earlier pricing. However, here is the current pricing for Postgres hosting as of 16 November 2026:
 
-**Bot-Hosting.net**
-| Plan | Memory | Storage | CPU | Deployments | Database backup | History | Per month |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Free | 256 MB | 512 MB | 25% | 1 | every hour | 24 h | R$0 |
-| Starter | 1 GB | 5 GB | 50% | 2 | every 15 min | 3 days | R$8.99 |
-| Starter+ | 2 GB | 8 GB | 100% | 4 | every 15 min | 7 days | R$12.99 |
-| Advanced | 4 GB | 15 GB | 200% | 8 | every 15 min | 14 days | R$24.99 |
-| Pro | 8 GB | 25 GB | 250% | 12 | every 15 min | 30 days | R$35.99 |
-| Pro+ | 14 GB | 40 GB | 400% | 25 | every 15 min | 60 days | R$53.99 |
-| Enterprise | 20 GB | 100 GB | 600% | 40 | every 15 min | 90 days | R$89.99 |
+| Provider | Plan | CPU / RAM / Storage | Price |
+| --- | --- | --- | --- |
+| Bot Hosting | Free | 256 MB RAM, 512 MB storage | R$0 |
+| Bot Hosting | Starter | 1 GB RAM, 5 GB storage | R$8.99/month |
+| Voroa | DB Nano | Shared CPU, 256 MB RAM, 1 GB SSD | ₹0/month+18% GST |
+| Voroa | DB Starter | 0.5 vCPU, 1 GB RAM, 1 GB SSD | ₹299/month+18% GST |
+| Voroa | DB Basic | 1 vCPU, 1 GB RAM, 5 GB SSD | ₹499/month+18% GST |
+| Voroa | DB Standard | 1 vCPU, 2 GB RAM, 10 GB SSD | ₹999/month+18% GST |
+| Voroa | DB Pro | 1 vCPU, 4 GB RAM, 10 GB SSD | ₹1,999/month+18% GST |
+| Voroa | DB Pro Max | 2 vCPU, 8 GB RAM, 10 GB SSD | ₹3,999/month+18% GST |
+| Neon | Free | 1 GB per project, 100 compute hours/month | Free |
+| Supabase | Free | 500 MB per project, 2 active projects | Free |
+| Prisma Postgres | Free | 2 GB, 200,000 operations/month | Free |
+| Nile | Free | 1 GB | Free |
+| Aiven | Free | 1 GB | Free |
 
-**Voroa**
-| Plan | CPU / RAM / Storage | Price |
-| --- | --- | --- |
-| DB Nano`pg_nano` | Shared CPU · 256 MB RAM · 100 connections · 1 GB SSD incl. | ₹0/month+18% GST |
-| DB Starter`pg_starter` | 0.5 vCPU, bursts to 1 · 1 GB RAM · 100 connections · 1 GB SSD incl. | ₹299/month+18% GST |
-| DB Basic`pg_basic_1gb` | 1 vCPU, bursts to 2 · 1 GB RAM · 100 connections · 5 GB SSD incl. | ₹499/month+18% GST |
-| DB Standard`pg_standard` | 1 vCPU, bursts to 2 · 2 GB RAM · 100 connections · 10 GB SSD incl. | ₹999/month+18% GST |
-| DB Pro`pg_basic_4gb` | 1 vCPU, bursts to 2 · 4 GB RAM · 100 connections · 10 GB SSD incl. | ₹1,999/month+18% GST |
-| DB Pro Max`pg_basic_256mb` | 2 vCPU, bursts to 4 · 8 GB RAM · 200 connections · 10 GB SSD incl. | ₹3,999/month+18% GST |
+Sources:
+[1] https://bot-hosting.net/postgresql-hosting
+[2] https://getvoroa.com/managed-postgresql-india
+[3] https://fastero.com/blog/free-postgres-database
 
-I have no record of any pricing from last Tuesday, so I cannot provide a comparison. These are the current prices as of today. [1][2]
+If you have specific providers or plans in mind that you discussed last Tuesday, please let me know, and I can check their current pricing for you.
 
 <details><summary>Memory block the model saw</summary>
 

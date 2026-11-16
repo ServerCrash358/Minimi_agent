@@ -1,9 +1,10 @@
 import { seedDemoHistory, type SeededConversation } from "../seed";
+import { buildAccuracyCases, seedAccuracy } from "./accuracy";
 import { buildCases, type EvalCase, type EvalEnv } from "./cases";
 import { buildHoldoutCases, seedHoldout } from "./holdout";
 
 export type Suite = {
-  id: "core" | "holdout";
+  id: "core" | "holdout" | "accuracy";
   title: string;
   /** Seed the history the suite's cases refer to, for the user who has history. */
   seed: (userId: string, nowMs: number, tz: string) => SeededConversation[];
@@ -22,5 +23,11 @@ export const SUITES: Record<Suite["id"], Suite> = {
     title: "Held-out suite (new questions of the same kinds, written after tuning)",
     seed: (userId, nowMs, tz) => seedHoldout(userId, nowMs, tz),
     build: buildHoldoutCases,
+  },
+  accuracy: {
+    id: "accuracy",
+    title: "Accuracy suite (canned vendor pages with known prices: is every verdict right?)",
+    seed: seedAccuracy,
+    build: buildAccuracyCases,
   },
 };

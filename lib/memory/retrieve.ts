@@ -161,6 +161,28 @@ function ftsQuery(words: string[]): string {
   return words.map((w) => `"${w.replace(/"/g, "")}"`).join(" OR ");
 }
 
+/**
+ * How many of the user's topic words does each turn contain? Asked of the FTS index itself, word by word, so the
+ * stemming is identical to the search that finds turns ("versions" in the question, "version" in the old answer).
+ * A plain substring test here once discarded exactly the conversation the search had found.
+ */
+export function topicScores(userId: string, topicWords: string[], turns: Turn[]): Map<string, number> {
+  const rowsWith = new Map<string, Set<number>>();
+  for (const w of topicWords) {
+    const rows = db()
+      .prepare("SELECT f.rowid AS rid FROM messages_fts f JOIN messages m ON m.rowid = f.rowid WHERE messages_fts MATCH ? AND m.user_id = ?")
+      .all(`"${w.replace(/"/g, "")}"`, userId) as { rid: number }[];
+    rowsWith.set(w, new Set(rows.map((r) => r.rid)));
+  }
+  const ridOf = (id: string) => (db().prepare("SELECT rowid AS rid FROM messages WHERE id = ?").get(id) as { rid: number }).rid;
+  const out = new Map<string, number>();
+  for (const t of turns) {
+    const ids = [ridOf(t.question.id), ...(t.answer ? [ridOf(t.answer.id)] : [])];
+    out.set(t.question.id, topicWords.filter((w) => ids.some((id) => rowsWith.get(w)!.has(id))).length);
+  }
+  return out;
+}
+
 export function retrieveMemory(input: RetrieveInput): Memory {
   const started = performance.now();
   const { userId, threadId, refs, nowMs, tz } = input;
@@ -209,24 +231,10 @@ export function retrieveMemory(input: RetrieveInput): Memory {
         if (q && !seen.has(q.id) && !byQuestion.has(q.id)) byQuestion.set(q.id, q);
       }
       const turns = buildTurns([...byQuestion.values()]);
-      // How many of the user's topic words does this turn contain? Asked of the FTS index itself, word by word, so
-      // the stemming is identical to the search that found it ("versions" in the question, "version" in the old
-      // answer). A plain substring test here once discarded exactly the conversation the search had found.
-      const rowsWith = new Map<string, Set<number>>();
-      for (const w of topicWords) {
-        const rows = db()
-          .prepare("SELECT f.rowid AS rid FROM messages_fts f JOIN messages m ON m.rowid = f.rowid WHERE messages_fts MATCH ? AND m.user_id = ?")
-          .all(`"${w.replace(/"/g, "")}"`, userId) as { rid: number }[];
-        rowsWith.set(w, new Set(rows.map((r) => r.rid)));
-      }
-      const ridOf = (id: string) => (db().prepare("SELECT rowid AS rid FROM messages WHERE id = ?").get(id) as { rid: number }).rid;
-      const score = (t: Turn) => {
-        const ids = [ridOf(t.question.id), ...(t.answer ? [ridOf(t.answer.id)] : [])];
-        return topicWords.filter((w) => ids.some((id) => rowsWith.get(w)!.has(id))).length;
-      };
+      const scores = topicScores(userId, topicWords, turns);
       const need = Math.min(2, topicWords.length);
       topical = turns
-        .map((t) => ({ t, s: score(t) }))
+        .map((t) => ({ t, s: scores.get(t.question.id) ?? 0 }))
         .filter((x) => x.s >= need)
         .sort((a, b) => b.s - a.s) // stable: ties keep BM25 order
         .slice(0, MAX_TOPICAL)

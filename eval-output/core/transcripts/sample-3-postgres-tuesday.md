@@ -22,25 +22,29 @@ Last Tuesday I asked you about Postgres hosting. Has any pricing changed since t
 
 ## Timing
 
-First token 1.4 s, answer starts 5.2 s, total 7.3 s, 2 model step(s).
+First token 4.3 s, answer starts 10.6 s, total 12.7 s, 2 model step(s).
 
 ## Searches
 
-- `pricing` (site neon.tech): 3 results, 537 ms
-- `pricing` (site supabase.com): 3 results, 457 ms
-- `rds postgresql pricing` (site aws.amazon.com): 3 results, 539 ms
+- `Neon pricing plans` (site neon.tech): 3 results, 1 ms, cached
+- `Supabase pricing plans` (site supabase.com): 2 results, 0 ms, cached
+- `AWS RDS for PostgreSQL pricing plans` (site aws.amazon.com): 3 results, 0 ms, cached
+- `Neon, Supabase, AWS RDS for PostgreSQL pricing changes and new announcements` (since 2026-11-10): 5 results, 0 ms, cached
+- `Neon pricing plans` (site neon.tech): 3 results, 1 ms, cached
+- `Supabase pricing plans` (site supabase.com): 2 results, 0 ms, cached
+- `AWS RDS for PostgreSQL pricing plans` (site aws.amazon.com): 3 results, 0 ms, cached
 
 ## Answer
 
-As of 16 November 2026, here are the changes in pricing for managed Postgres hosting since last Tuesday:
+As of 16 November 2026, here are the changes in Postgres hosting pricing since 10 November 2026:
 
-| Item | Then (10 Nov 2026) | Now | Verdict | Source |
-| --- | --- | --- | --- | --- |
-| Neon Launch plan price per month | $19 | Usage-based, typical spend $15/mo | Changed | [6] |
-| Supabase Pro plan price per month | $25 | $25 | Unchanged | [2] |
-| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [7] |
+| Provider | Item | Then (10 Nov 2026) | Now | Verdict | Source |
+| --- | --- | --- | --- | --- | --- |
+| Neon | Launch plan price per month | $19 | Usage-based at $0.106 per CU-hour and $0.35 per GB-month | Changed | [1][2][3] |
+| Supabase | Pro plan price per month | $25 | From $25/month, including 8 GB disk size per project and $10/month in compute credits | Unchanged | [4][5] |
+| AWS RDS for PostgreSQL | db.t4g.micro approximate price per month | About $12 plus storage | Varies by region and usage, see [6] for details | Changed | [6] |
 
-Neon's Launch plan has changed to a usage-based model with a typical spend of $15 per month. Supabase Pro plan and AWS RDS for PostgreSQL pricing remain unchanged.
+Summary: Neon's Launch plan pricing has changed to a usage-based model, while Supabase's Pro plan remains unchanged. AWS RDS for PostgreSQL's pricing for db.t4g.micro instances now varies by region and usage.
 
 <details><summary>Memory block the model saw</summary>
 

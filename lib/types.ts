@@ -21,9 +21,17 @@ export type SearchToolOutput =
     }
   | { query: string; error: string; results: [] };
 
+/** The chip above an answer: what the agent remembered, and how much it re-checked. */
+export type MemoryChip = { kind: "recalled" | "none"; label: string; rechecked?: number };
+
 export type ChatMessage = UIMessage<
   { createdAt?: number },
-  { source: SourceData },
+  {
+    source: SourceData;
+    memory: MemoryChip;
+    /** Marks that the text before this part was a draft; only the text after it is the answer. */
+    revised: { reason: string };
+  },
   { web_search: { input: SearchToolInput; output: SearchToolOutput } }
 >;
 

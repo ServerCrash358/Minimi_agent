@@ -42,11 +42,28 @@ A blog post is not a source for a price. Do not rely on date-filtered search for
 - No preamble ("Let me check...", "I'll search for..."), no filler, no emojis, no restating the question, no closing recap of the table.
 - Ask a clarifying question only if you truly cannot proceed; otherwise state your assumption and continue.`;
 
-export function buildSystemPrompt(opts: { now: number; tz: string; memoryBlock?: string; searchesLeft?: boolean }): string {
+export function buildSystemPrompt(opts: {
+  now: number;
+  tz: string;
+  memoryBlock?: string;
+  searchesLeft?: boolean;
+  /** Plain-text results of searches the pipeline already ran for this turn. */
+  prefetched?: string;
+  /** What kind of turn this is, when the pipeline has decided (tools off, searches already run). */
+  turnNote?: string;
+}): string {
   const dt = DateTime.fromMillis(opts.now, { zone: opts.tz });
   const today = `${dt.toFormat("cccc d LLLL yyyy")}, ${dt.toFormat("HH:mm")} (${opts.tz})`;
   const parts = [RULES, `# Today\nToday is ${today}. The user's timezone is ${opts.tz}.`];
   if (opts.memoryBlock?.trim()) parts.push(opts.memoryBlock.trim());
+  if (opts.prefetched?.trim()) {
+    parts.push(
+      opts.prefetched.trim() +
+        "\n\nThese searches were already run for you: the vendors' own pages as they are today, and news since the earlier answer. " +
+        "Read them first and answer from them. Call web_search only to fill a specific gap, never to repeat one of these.",
+    );
+  }
+  if (opts.turnNote?.trim()) parts.push(`# This turn\n${opts.turnNote.trim()}`);
   if (opts.searchesLeft === false) {
     parts.push("# Search budget\nYou have no searches left. Answer now using only what you already have, and state clearly what you could not verify.");
   }

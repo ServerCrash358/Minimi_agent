@@ -22,25 +22,30 @@ Two weeks ago I asked you about vector database hosting. Has any pricing changed
 
 ## Timing
 
-First token 1.6 s, answer starts 8.7 s, total 9.9 s, 2 model step(s).
+First token 1.5 s, answer starts 10.8 s, total 12.6 s, 2 model step(s).
 
 ## Searches
 
-- `pricing` (site pinecone.io): 1 results, 1928 ms
-- `pricing` (site qdrant.tech): 3 results, 1925 ms
-- `pricing` (site weaviate.io): 3 results, 1646 ms
+- `Pinecone pricing plans` (site pinecone.io): 2 results, 1 ms, cached
+- `Qdrant Cloud latest stable release` (site qdrant.tech): 3 results, 0 ms, cached
+- `Weaviate Cloud pricing plans` (site weaviate.io): 3 results, 0 ms, cached
+- `Pinecone, Qdrant Cloud, Weaviate Cloud pricing changes and new announcements` (since 2026-11-02): 4 results, 0 ms, cached
+- `Pinecone pricing changes since November 2, 2026` (since 2026-11-02): 4 results, 2688 ms
+- `Qdrant Cloud pricing changes since November 2, 2026` (since 2026-11-02): 4 results, 2871 ms
+- `Weaviate Cloud pricing changes since November 2, 2026` (since 2026-11-02): 5 results, 2114 ms
 
 ## Answer
 
-As of 16 November 2026, here are the changes in vector database hosting pricing since two weeks ago:
+As of 16 November 2026, here are the changes in vector database hosting pricing since your last inquiry:
 
-| Provider | Plan | Then (2 Nov 2026) | Now | Verdict | Source |
-| --- | --- | --- | --- | --- | --- |
-| Pinecone | Standard | $50/month minimum | $50/month minimum | Unchanged | [7] |
-| Qdrant Cloud | Free cluster | $0 for 1 GB | $0 for 1 GB | Unchanged | [4] |
-| Weaviate Cloud | Flex | from $45/month | from $45/month | Unchanged | [1] |
+| Item | Then (date) | Now | Verdict | Source |
+| --- | --- | --- | --- | --- |
+| Pinecone Standard plan minimum per month | $50 (as of 2 Nov 2026) | $50 | Unchanged | [9] |
+| Pinecone Builder plan price | Not recorded | $20/month flat | New plan | [9] |
+| Qdrant Cloud Free cluster size | 1 GB (as of 2 Nov 2026) | Not found | Changed | [18] |
+| Weaviate Cloud Flex plan starting price per month | $45 (as of 2 Nov 2026) | $45 | Unchanged | [13] |
 
-All prices remain the same as they were two weeks ago.
+Summary: Pinecone's Standard plan minimum and Weaviate Cloud's Flex plan starting price remain unchanged. Pinecone introduced a new Builder plan at $20/month flat. Qdrant Cloud's Free cluster size could not be verified as the earlier value was not found in the current search results.
 
 <details><summary>Memory block the model saw</summary>
 

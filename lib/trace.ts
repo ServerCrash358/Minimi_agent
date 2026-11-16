@@ -12,6 +12,10 @@ export type SearchTrace = {
   error?: string;
   /** A page contained text addressed to AI assistants; it was removed before the model saw it. */
   flagged?: boolean;
+  /** Started by the pipeline before the model ran, not chosen by the model. */
+  prefetched?: boolean;
+  /** An exact repeat of a search already made this turn, answered from memory without running it again. */
+  memoised?: boolean;
 };
 
 export type Trace = {
@@ -23,6 +27,14 @@ export type Trace = {
   resolvedDates: unknown[];
   /** Summary of memory retrieval: which turns were found for which date, by topic, by entity. */
   memory: unknown;
+  /** What kind of turn the pipeline decided this was, and why (see lib/agent/intent.ts). */
+  intent?: { kind: string; reason: string };
+  /** Searches the pipeline started before the model ran, for a re-check. */
+  prefetch?: { planned: number; ms: number };
+  /** The post-answer check: what was wrong with the draft, and whether it was rewritten once. */
+  guard?: { defects: string[]; repaired: boolean };
+  /** The memory chip shown above the answer. */
+  chip?: { kind: "recalled" | "none"; label: string; rechecked?: number };
   searches: SearchTrace[];
   steps: number;
   usage?: { inputTokens?: number; outputTokens?: number };

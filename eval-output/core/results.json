@@ -2,7 +2,7 @@
   "suite": "core",
   "suiteTitle": "Core suite (the three sample questions and the cases written alongside them)",
   "model": "bedrock:us.amazon.nova-pro-v1:0",
-  "startedAt": "2026-11-16T14:26:28.316Z",
+  "startedAt": "2026-11-16T15:14:52.321Z",
   "tz": "Asia/Calcutta",
   "results": [
     {
@@ -37,53 +37,66 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, here is the status of the CRM tools you shortlisted on Monday, 9 November 2026:\n\n| Item | Then (9 Nov 2026) | Now (16 Nov 2026) | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| HubSpot Sales Hub Starter price per seat per month | $20 | $9 (annual) / $15 (monthly) | Changed | [11] |\n| Pipedrive Advanced price per seat per month | $34 | $14–$79 | Changed | [8][9][10] |\n| Zoho CRM Professional price per seat per month | $23 | $23 | Unchanged | [5][6][7] |\n| Salesforce Sales Starter Suite price per seat per month | $25 | $25 | Unchanged | [15][16][17] |\n| Freshsales Growth price per seat per month | $11 | $9 | Changed | [12][13][14] |\n\nSummary: HubSpot Sales Hub Starter and Freshsales Growth have changed prices since the last check. Pipedrive Advanced has a broader price range now. Zoho CRM Professional and Salesforce Sales Starter Suite remain unchanged. There have been updates and new features announced for HubSpot, ServiceNow, Creatio, and Zite since the last check.",
-      "firstTokenMs": 3386,
-      "answerStartMs": 13582,
-      "totalMs": 15949,
+      "answer": "As of 16 November 2026, here is the comparison of the CRM tool pricing changes since the earlier conversation:\n\n| Tool | Plan | Earlier Price per Seat per Month | Current Price per Seat per Month | Verdict | Source |\n| --- | --- | --- | --- | --- | --- |\n| HubSpot Sales Hub | Starter | $20 | $7 | Changed | [1] |\n| Pipedrive | Advanced | $34 | $14 | Changed | [2] |\n| Zoho CRM | Professional | $23 | $14 | Changed | [3] |\n| Salesforce Sales | Starter Suite | $25 | $7 (HubSpot Sales Hub Starter), $14 (Pipedrive Lite), $14 (Zoho CRM Standard) | Changed | [4] |\n| Freshsales | Growth | $11 | $9 | Changed | [5] |\n\nAll CRM tools have changed their pricing since the earlier conversation. HubSpot Sales Hub Starter, Pipedrive Lite, and Zoho CRM Standard are now cheaper alternatives to Salesforce Starter Suite. Freshsales Growth plan has also decreased in price. [12]",
+      "firstTokenMs": 3728,
+      "answerStartMs": 7153,
+      "totalMs": 16492,
       "steps": 2,
       "searches": [
         {
-          "query": "HubSpot Sales Hub pricing per seat",
+          "query": "HubSpot Sales Hub pricing plans",
           "site": "hubspot.com",
-          "cached": false,
-          "ms": 3765,
-          "results": 1
+          "cached": true,
+          "ms": 2,
+          "results": 1,
+          "prefetched": true
         },
         {
-          "query": "Pipedrive pricing per seat",
+          "query": "Pipedrive pricing plans",
           "site": "pipedrive.com",
-          "cached": false,
-          "ms": 2409,
-          "results": 3
+          "cached": true,
+          "ms": 0,
+          "results": 3,
+          "prefetched": true
         },
         {
-          "query": "Zoho CRM pricing per seat",
+          "query": "Zoho CRM pricing plans",
           "site": "zoho.com",
-          "cached": false,
-          "ms": 2405,
-          "results": 3
+          "cached": true,
+          "ms": 0,
+          "results": 2,
+          "prefetched": true
         },
         {
-          "query": "Salesforce Sales pricing per seat",
+          "query": "Salesforce Sales pricing plans",
           "site": "salesforce.com",
-          "cached": false,
-          "ms": 4953,
-          "results": 3
+          "cached": true,
+          "ms": 0,
+          "results": 3,
+          "prefetched": true
         },
         {
-          "query": "Freshsales pricing per seat",
+          "query": "Freshsales pricing plans",
           "site": "freshworks.com",
-          "cached": false,
-          "ms": 3992,
-          "results": 3
+          "cached": true,
+          "ms": 0,
+          "results": 2,
+          "prefetched": true
         },
         {
-          "query": "CRM tool updates announcements",
+          "query": "HubSpot Sales Hub, Pipedrive, Zoho CRM, Salesforce Sales, Freshsales pricing changes and new announcements",
           "since": "2026-11-09",
-          "cached": false,
-          "ms": 1895,
-          "results": 4
+          "cached": true,
+          "ms": 0,
+          "results": 3,
+          "prefetched": true
+        },
+        {
+          "query": "HubSpot Sales Hub, Pipedrive, Zoho CRM, Salesforce Sales, Freshsales pricing changes and new announcements",
+          "since": "2026-11-09",
+          "cached": true,
+          "ms": 1,
+          "results": 3
         }
       ],
       "factsStored": 0
@@ -116,25 +129,27 @@
           "ok": true
         }
       ],
-      "answer": "Here is what you asked on 3 November and whether the answer is still correct today:\n\n**What you asked on 3 November:**\n\"What is the latest stable Python version, and when does it reach end of life?\"\n\n**Answer given on 3 November:**\nAs of 3 November 2026, the latest stable release is Python 3.14 [1]. It is supported with bug fixes until October 2027 and security fixes until October 2030 [1].\n\n**Is the answer still correct today?**\n\n| Item | Then (3 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Latest stable Python version | Python 3.14 | Python 3.15 | Changed | [1] |\n| End of security support for Python 3.14 | October 2030 | October 2030 | Unchanged | [2] |\n\n**Summary:**\nThe latest stable Python version has changed from Python 3.14 to Python 3.15. The end of security support for Python 3.14 remains unchanged as October 2030.\n\n[1]: https://devguide.python.org/versions\n[2]: https://devguide.python.org/versions",
-      "firstTokenMs": 1436,
-      "answerStartMs": 6081,
-      "totalMs": 8749,
-      "steps": 2,
+      "answer": "As of 16 November 2026, the latest stable release is Python 3.15, not Python 3.14 [1][3]. Python 3.14 is still supported with bug fixes until October 2027 and security fixes until October 2030 [1]. \n\n| Item | Then (2026-11-03) | Now (2026-11-16) | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Python | latest stable version | 3.14 | 3.15 | Changed [1][3] |\n| Python 3.14 | end of security support | October 2030 | October 2030 | Unchanged [1] |\n\nThe latest stable version has changed, but the end-of-life date for Python 3.14 has not.\n\n[1] Status of Python versions (https://devguide.python.org/versions)\n[3] Our Blogs | Python.org (https://www.python.org/blogs)",
+      "firstTokenMs": 2516,
+      "answerStartMs": 2516,
+      "totalMs": 6726,
+      "steps": 1,
       "searches": [
         {
-          "query": "Python latest stable version",
+          "query": "Python latest stable release",
           "site": "devguide.python.org",
-          "cached": false,
-          "ms": 546,
-          "results": 3
+          "cached": true,
+          "ms": 0,
+          "results": 1,
+          "prefetched": true
         },
         {
-          "query": "Python 3.14 end of security support",
-          "site": "devguide.python.org",
-          "cached": false,
-          "ms": 1506,
-          "results": 1
+          "query": "Python new release announcements",
+          "since": "2026-11-03",
+          "cached": true,
+          "ms": 0,
+          "results": 4,
+          "prefetched": true
         }
       ],
       "factsStored": 0
@@ -187,31 +202,63 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, here are the changes in pricing for managed Postgres hosting since last Tuesday:\n\n| Item | Then (10 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Neon Launch plan price per month | $19 | Usage-based, typical spend $15/mo | Changed | [6] |\n| Supabase Pro plan price per month | $25 | $25 | Unchanged | [2] |\n| AWS RDS for PostgreSQL db.t4g.micro approximate price per month | about $12 plus storage | about $12 plus storage | Unchanged | [7] |\n\nNeon's Launch plan has changed to a usage-based model with a typical spend of $15 per month. Supabase Pro plan and AWS RDS for PostgreSQL pricing remain unchanged.",
-      "firstTokenMs": 1432,
-      "answerStartMs": 5215,
-      "totalMs": 7326,
+      "answer": "As of 16 November 2026, here are the changes in Postgres hosting pricing since 10 November 2026:\n\n| Provider | Item | Then (10 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- | --- |\n| Neon | Launch plan price per month | $19 | Usage-based at $0.106 per CU-hour and $0.35 per GB-month | Changed | [1][2][3] |\n| Supabase | Pro plan price per month | $25 | From $25/month, including 8 GB disk size per project and $10/month in compute credits | Unchanged | [4][5] |\n| AWS RDS for PostgreSQL | db.t4g.micro approximate price per month | About $12 plus storage | Varies by region and usage, see [6] for details | Changed | [6] |\n\nSummary: Neon's Launch plan pricing has changed to a usage-based model, while Supabase's Pro plan remains unchanged. AWS RDS for PostgreSQL's pricing for db.t4g.micro instances now varies by region and usage.",
+      "firstTokenMs": 4341,
+      "answerStartMs": 10604,
+      "totalMs": 12723,
       "steps": 2,
       "searches": [
         {
-          "query": "pricing",
+          "query": "Neon pricing plans",
           "site": "neon.tech",
-          "cached": false,
-          "ms": 537,
-          "results": 3
+          "cached": true,
+          "ms": 1,
+          "results": 3,
+          "prefetched": true
         },
         {
-          "query": "pricing",
+          "query": "Supabase pricing plans",
           "site": "supabase.com",
-          "cached": false,
-          "ms": 457,
+          "cached": true,
+          "ms": 0,
+          "results": 2,
+          "prefetched": true
+        },
+        {
+          "query": "AWS RDS for PostgreSQL pricing plans",
+          "site": "aws.amazon.com",
+          "cached": true,
+          "ms": 0,
+          "results": 3,
+          "prefetched": true
+        },
+        {
+          "query": "Neon, Supabase, AWS RDS for PostgreSQL pricing changes and new announcements",
+          "since": "2026-11-10",
+          "cached": true,
+          "ms": 0,
+          "results": 5,
+          "prefetched": true
+        },
+        {
+          "query": "Neon pricing plans",
+          "site": "neon.tech",
+          "cached": true,
+          "ms": 1,
           "results": 3
         },
         {
-          "query": "rds postgresql pricing",
+          "query": "Supabase pricing plans",
+          "site": "supabase.com",
+          "cached": true,
+          "ms": 0,
+          "results": 2
+        },
+        {
+          "query": "AWS RDS for PostgreSQL pricing plans",
           "site": "aws.amazon.com",
-          "cached": false,
-          "ms": 539,
+          "cached": true,
+          "ms": 0,
           "results": 3
         }
       ],
@@ -241,10 +288,10 @@
           "ok": true
         }
       ],
-      "answer": "I have no record of a conversation from 7 October 2026. The nearest date with stored conversations is Tuesday 3 November 2026. If you can tell me what was discussed on 7 October, I can check the current status of those items for you.",
-      "firstTokenMs": 945,
-      "answerStartMs": 945,
-      "totalMs": 1597,
+      "answer": "I have no record of our conversation on 7 October 2026. The nearest day with a conversation is 3 November 2026. If you can tell me what was discussed, I can check the current state of those items.",
+      "firstTokenMs": 1434,
+      "answerStartMs": 1434,
+      "totalMs": 2410,
       "steps": 1,
       "searches": [],
       "factsStored": 0
@@ -254,7 +301,7 @@
       "title": "A question that needs no search",
       "why": "Stable knowledge is answered directly: fast, no tool call, no memory lookup, short.",
       "question": "What is a database index and when would I use one?",
-      "passed": false,
+      "passed": true,
       "checks": [
         {
           "name": "produced an answer",
@@ -262,8 +309,7 @@
         },
         {
           "name": "did not search",
-          "ok": false,
-          "detail": "searched 1x"
+          "ok": true
         },
         {
           "name": "did not consult memory",
@@ -278,19 +324,12 @@
           "ok": true
         }
       ],
-      "answer": "A database index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure. Indexes are used to quickly locate data without having to search every row in a database table every time a database table is accessed [1][3].\n\nYou would use a database index when you need to improve the performance of data retrieval operations, especially on large tables. Indexes are particularly useful for columns that are frequently searched, sorted, or used in `JOIN` operations, such as primary keys, foreign keys, or fields in `WHERE` clauses [2]. \n\nHere are some specific scenarios where you might use a database index:\n- **Frequent Searches**: If you often search for data using specific columns, an index on those columns can significantly speed up the search process [2].\n- **Sorting and Aggregation**: Indexes can improve the performance of operations that involve sorting (`ORDER BY`) or aggregation (`GROUP BY`) [2].\n- **Join Operations**: Indexes on foreign keys can speed up `JOIN` operations by quickly locating the matching rows in the related table [2].\n- **Covering Indexes**: For queries that retrieve a small subset of columns, a covering index that includes all the required columns can eliminate the need to access the main table, further improving query performance [4].\n\nIn summary, database indexes are a powerful tool for optimizing query performance, but they should be used judiciously to balance the benefits of faster data retrieval against the costs of additional storage and maintenance overhead [1][2][4].",
-      "firstTokenMs": 627,
-      "answerStartMs": 4149,
-      "totalMs": 6671,
-      "steps": 2,
-      "searches": [
-        {
-          "query": "what is a database index and when to use one",
-          "cached": false,
-          "ms": 1338,
-          "results": 5
-        }
-      ],
+      "answer": "A database index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure. Indexes are used to quickly locate data without having to search every row in a database table every time a database table is accessed.\n\nYou would use a database index when:\n- You need to speed up the retrieval of data, especially for large tables.\n- You frequently query a specific column or set of columns.\n- You have a large table and need to improve query performance.\n- You want to enforce uniqueness on a column (unique index).\n\nIndexes are particularly useful for columns that are often used in the WHERE clause of SQL queries, in JOIN operations, or as foreign keys.",
+      "firstTokenMs": 861,
+      "answerStartMs": 861,
+      "totalMs": 2069,
+      "steps": 1,
+      "searches": [],
       "factsStored": 0
     },
     {
@@ -325,31 +364,31 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, the pricing comparison for Linear, Jira, and Asana for a 10-person team is as follows:\n\n| Tool | Plan | Price per User/Month | Total for 10 Users/Month |\n| --- | --- | --- | --- |\n| Linear | Basic | $10 | $100 |\n| Linear | Business | $16 | $160 |\n| Jira | Standard | $10.70 (based on tier pricing) | $107 |\n| Asana | Starter | $10.99 | $109.90 |\n| Asana | Advanced | $24.99 | $249.90 |\n\n**Summary:**\n- Linear offers two plans: Basic at $10 per user/month and Business at $16 per user/month.\n- Jira's Standard plan is priced at $10.70 per user/month for a 10-person team, based on tier pricing.\n- Asana offers Starter at $10.99 per user/month and Advanced at $24.99 per user/month.\n\n[1][2][4]",
-      "firstTokenMs": 3209,
-      "answerStartMs": 10431,
-      "totalMs": 13026,
+      "answer": "As of 16 November 2026, the pricing for a 10-person team is as follows:\n\n| Service | Plan | Price per user/month |\n| --- | --- | --- |\n| Linear | Basic | $10 [1] |\n| Jira | Free | $0 (up to 10 users) [8] |\n| Asana | Starter | $10.99 (billed annually) [6] |\n\n**Summary:** Linear's Basic plan costs $10 per user per month, Jira offers a free plan for up to 10 users, and Asana's Starter plan is $10.99 per user per month when billed annually.\n\n[1] https://linear.app/pricing\n[6] https://asana.com/resources/best-project-management-software\n[8] https://www.atlassian.com/software/jira/guides/more/jira-editions",
+      "firstTokenMs": 860,
+      "answerStartMs": 9996,
+      "totalMs": 11510,
       "steps": 2,
       "searches": [
         {
-          "query": "Linear pricing",
+          "query": "Linear pricing for 10-person team",
           "site": "linear.app",
           "cached": false,
-          "ms": 3460,
+          "ms": 2955,
           "results": 3
         },
         {
-          "query": "Jira pricing",
+          "query": "Jira pricing for 10-person team",
           "site": "atlassian.com",
           "cached": false,
-          "ms": 1929,
+          "ms": 3727,
           "results": 3
         },
         {
-          "query": "Asana pricing",
+          "query": "Asana pricing for 10-person team",
           "site": "asana.com",
           "cached": false,
-          "ms": 3197,
+          "ms": 3097,
           "results": 3
         }
       ],
@@ -360,32 +399,30 @@
       "title": "Ambiguous 'last week'",
       "why": "'Last week' is a calendar week or the past seven days; both are searched and the Postgres chat (last week's Tuesday) is found either way.",
       "question": "What did we discuss last week?",
-      "passed": false,
+      "passed": true,
       "checks": [
         {
           "name": "produced an answer",
-          "ok": false,
-          "detail": "no answer (The model returned an empty answer.)"
+          "ok": true
         },
         {
           "name": "recalled the \"postgres\" conversation (Tue 10 Nov 2026)",
-          "ok": false,
-          "detail": "that turn was not in the memory block"
+          "ok": true
         },
         {
           "name": "answer mentions the Postgres conversation",
-          "ok": false,
-          "detail": "answer does not match /postgres/i"
+          "ok": true
         },
         {
           "name": "resolved 'last week' as a date reference",
-          "ok": false,
-          "detail": "no 'last week' reference"
+          "ok": true
         }
       ],
-      "answer": "",
-      "error": "The model returned an empty answer.",
-      "steps": 0,
+      "answer": "Last week, we discussed two topics:\n\n1. **CRM shortlist for a 20-person sales team (9 November 2026):**\n   - HubSpot Sales Hub Starter: $20 per seat per month [1]\n   - Pipedrive Advanced: $34 per seat per month [2]\n   - Zoho CRM Professional: $23 per seat per month [3]\n   - Salesforce Sales Starter Suite: $25 per seat per month [4]\n   - Freshsales Growth: $11 per seat per month [5]\n\n2. **Managed Postgres hosting prices (10 November 2026):**\n   - Neon Launch: $19 per month [1]\n   - Supabase Pro: $25 per month [2]\n   - AWS RDS for PostgreSQL db.t4g.micro: about $12 per month plus storage [3]\n\nIf you need to verify if these prices or options have changed, let me know, and I'll check the current information for you.\n\n[1] HubSpot Sales Hub pricing - https://www.hubspot.com/pricing/sales\n[2] Pipedrive pricing - https://www.pipedrive.com/en/pricing\n[3] Zoho CRM pricing - https://www.zoho.com/crm/pricing/\n[4] Salesforce Sales pricing - https://www.salesforce.com/sales/pricing/\n[5] Freshsales pricing - https://www.freshworks.com/crm/pricing/\n[1] Neon pricing - https://neon.tech/pricing\n[2] Supabase pricing - https://supabase.com/pricing\n[3] Amazon RDS for PostgreSQL pricing - https://aws.amazon.com/rds/postgresql/pricing/",
+      "firstTokenMs": 1986,
+      "answerStartMs": 1986,
+      "totalMs": 3604,
+      "steps": 1,
       "searches": [],
       "factsStored": 0
     },
@@ -409,27 +446,12 @@
           "ok": true
         }
       ],
-      "answer": "Based on the prior conversations block, in the conversation on Tuesday 10 November 2026, I mentioned that Neon's Launch plan was the cheapest to start with, priced at $19 per month. However, in the conversation on Monday 16 November 2026, I updated the pricing information and mentioned that Neon's Launch plan had changed to a usage-based model with a typical spend of $15 per month. Supabase Pro plan and AWS RDS for PostgreSQL pricing remained unchanged.\n\nTherefore, as of 16 November 2026, Neon's usage-based model with a typical spend of $15 per month is the cheapest option to start with for managed Postgres hosting.",
-      "firstTokenMs": 3304,
-      "answerStartMs": 10350,
-      "totalMs": 11744,
-      "steps": 3,
-      "searches": [
-        {
-          "query": "cheapest Postgres hosting provider",
-          "site": "open-assistant.io",
-          "cached": false,
-          "ms": 1370,
-          "results": 0
-        },
-        {
-          "query": "Postgres hosting prices",
-          "site": "open-assistant.io",
-          "cached": false,
-          "ms": 1092,
-          "results": 0
-        }
-      ],
+      "answer": "In an earlier chat on Tuesday 10 November 2026, I mentioned that Neon was the cheapest to start with, at $19/month for their Launch plan [1]. \n\nIf you'd like to know if this is still the case, I can check the current prices for you.\n\n[1] Neon pricing - https://neon.tech/pricing",
+      "firstTokenMs": 2886,
+      "answerStartMs": 2886,
+      "totalMs": 3513,
+      "steps": 1,
+      "searches": [],
       "factsStored": 0
     },
     {
@@ -456,10 +478,10 @@
           "ok": true
         }
       ],
-      "answer": "On Monday 16 Nov 2026, you asked about the latest stable Python version and its end-of-life date. Here is what you asked and the answer I provided:\n\n**What you asked on 3 November:**\n\"What is the latest stable Python version, and when does it reach end of life?\"\n\n**Answer given on 3 November:**\nAs of 3 November 2026, the latest stable release is Python 3.14 [1]. It is supported with bug fixes until October 2027 and security fixes until October 2030 [1].\n\n**Is the answer still correct today?**\n\n| Item | Then (3 Nov 2026) | Now | Verdict | Source |\n| --- | --- | --- | --- | --- |\n| Latest stable Python version | Python 3.14 | Python 3.15 | Changed | [1] |\n| End of security support for Python 3.14 | October 2030 | October 2030 | Unchanged | [2] |\n\n**Summary:**\nThe latest stable Python version has changed from Python 3.14 to Python 3.15. The end of security support for Python 3.14 remains unchanged as October 2030.\n\n[1]: https://devguide.python.org/versions\n[2]: https://devguide.python.org/versions\n\nSources cited in that answer:\n[1] Status of Python versions - https://devguide.python.org/versions (published 2026-10-29)\n[2] Development cycle - https://devguide.python.org/developer-workflow/development-cycle (published 2026-07-28)\n[3] Python Developer’s Guide - https://devguide.python.org/\n[4] Status of Python versions - https://devguide.python.org/versions?form=MG0AV3&form=MG0AV3 (published 2026-05-27)",
-      "firstTokenMs": 3302,
-      "answerStartMs": 3302,
-      "totalMs": 7268,
+      "answer": "On Tuesday 3 November 2026, I told you:\n\n\"As of 3 November 2026, the latest stable release is Python 3.14. It is supported with bug fixes until October 2027 and security fixes until October 2030.\"\n\nIf you'd like to know if this is still current, I would check the Python status of versions page for the latest information. Would you like me to do that now?",
+      "firstTokenMs": 2234,
+      "answerStartMs": 2234,
+      "totalMs": 3027,
       "steps": 1,
       "searches": [],
       "factsStored": 0
@@ -484,10 +506,10 @@
           "ok": true
         }
       ],
-      "answer": "Yesterday, on Wednesday 11 March 2026, you asked: \"How much does Linear cost per seat?\"\n\nHere is what I told you then:\n\"Linear Standard is $10 per user per month, billed annually.\"",
-      "firstTokenMs": 3157,
-      "answerStartMs": 3157,
-      "totalMs": 3577,
+      "answer": "On Wednesday 11 March 2026, you asked: \"How much does Linear cost per seat?\"\n\nI would now check the current pricing if you want to know if it has changed. Would you like me to do that?",
+      "firstTokenMs": 2371,
+      "answerStartMs": 2371,
+      "totalMs": 2990,
       "steps": 1,
       "searches": [],
       "factsStored": 0
@@ -512,10 +534,10 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, the Acme Pro plan costs $30 per user per month, billed annually [1]. \n\n[1] https://acme.example/pricing",
-      "firstTokenMs": 877,
-      "answerStartMs": 2220,
-      "totalMs": 2963,
+      "answer": "As of 16 November 2026, the Acme Pro plan costs $30 per user per month, billed annually [1].",
+      "firstTokenMs": 1837,
+      "answerStartMs": 6074,
+      "totalMs": 6770,
       "steps": 2,
       "searches": [
         {
@@ -545,17 +567,17 @@
           "ok": true
         }
       ],
-      "answer": "I'm sorry, but I could not verify the current price of Notion's Plus plan due to a timeout error during the search. Please try again later or visit Notion's official website directly for the most accurate pricing information.",
-      "firstTokenMs": 923,
-      "answerStartMs": 2546,
-      "totalMs": 3319,
+      "answer": "I was unable to retrieve the current price of Notion's Plus plan due to a timeout in the search. Please try again later or visit Notion's official website directly for the most up-to-date pricing information.",
+      "firstTokenMs": 3398,
+      "answerStartMs": 5788,
+      "totalMs": 6485,
       "steps": 2,
       "searches": [
         {
           "query": "Plus plan pricing",
           "site": "notion.so",
           "cached": false,
-          "ms": 1,
+          "ms": 0,
           "results": 0,
           "error": "The search timed out."
         }
@@ -586,17 +608,17 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, the latest stable version of PostgreSQL is 18.7, released on November 12, 2026 [3].",
-      "firstTokenMs": 876,
-      "answerStartMs": 4890,
-      "totalMs": 5201,
+      "answer": "As of 16 November 2026, the latest stable version of PostgreSQL is PostgreSQL 18.7, as indicated by the release announcement on the official PostgreSQL website [3]. This version was released on November 12, 2026, alongside updates for other supported versions and a release candidate for PostgreSQL 19 [2].",
+      "firstTokenMs": 2884,
+      "answerStartMs": 9905,
+      "totalMs": 10492,
       "steps": 2,
       "searches": [
         {
           "query": "latest stable version",
           "site": "postgresql.org",
           "cached": false,
-          "ms": 2640,
+          "ms": 3036,
           "results": 3
         }
       ],
@@ -626,17 +648,17 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, the current price for the Supabase Pro plan is $25 per month [1]. I have no record of past conversations regarding the Supabase Pro plan price. Therefore, I cannot provide information on whether the price has changed recently.\n\nHere are the details of the Supabase Pro plan:\n- Price: $25 per month\n- Includes: 100,000 monthly active users, 8 GB disk size per project, 250 GB bandwidth, daily backups (7-day retention), and email support [1].\n\nIf you have any specific questions or need further assistance, please let me know.\n\n[1] https://supabase.com/pricing",
-      "firstTokenMs": 784,
-      "answerStartMs": 2975,
-      "totalMs": 4198,
+      "answer": "As of 16 November 2026, the Supabase Pro plan is priced at $25 per month [1][2][3]. I found no record of a past conversation about Supabase Pro plan prices. I could not verify if this price has changed recently because the pricing page does not provide historical data, and I found no announcements or news about a recent price change.\n\nSummary of findings:\n- Current Supabase Pro plan price: $25 per month.\n\nIf you need to check for changes since a specific past date, please provide that date and any details from the conversation.",
+      "firstTokenMs": 1894,
+      "answerStartMs": 8539,
+      "totalMs": 9560,
       "steps": 2,
       "searches": [
         {
-          "query": "Supabase Pro plan pricing",
+          "query": "Supabase Pro plan price",
           "site": "supabase.com",
           "cached": false,
-          "ms": 369,
+          "ms": 3924,
           "results": 3
         }
       ],
@@ -666,17 +688,17 @@
           "ok": true
         }
       ],
-      "answer": "As of 16 November 2026, here are the current pricing plans for Postgres hosting from two providers:\n\n**Bot-Hosting.net**\n| Plan | Memory | Storage | CPU | Deployments | Database backup | History | Per month |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| Free | 256 MB | 512 MB | 25% | 1 | every hour | 24 h | R$0 |\n| Starter | 1 GB | 5 GB | 50% | 2 | every 15 min | 3 days | R$8.99 |\n| Starter+ | 2 GB | 8 GB | 100% | 4 | every 15 min | 7 days | R$12.99 |\n| Advanced | 4 GB | 15 GB | 200% | 8 | every 15 min | 14 days | R$24.99 |\n| Pro | 8 GB | 25 GB | 250% | 12 | every 15 min | 30 days | R$35.99 |\n| Pro+ | 14 GB | 40 GB | 400% | 25 | every 15 min | 60 days | R$53.99 |\n| Enterprise | 20 GB | 100 GB | 600% | 40 | every 15 min | 90 days | R$89.99 |\n\n**Voroa**\n| Plan | CPU / RAM / Storage | Price |\n| --- | --- | --- |\n| DB Nano`pg_nano` | Shared CPU · 256 MB RAM · 100 connections · 1 GB SSD incl. | ₹0/month+18% GST |\n| DB Starter`pg_starter` | 0.5 vCPU, bursts to 1 · 1 GB RAM · 100 connections · 1 GB SSD incl. | ₹299/month+18% GST |\n| DB Basic`pg_basic_1gb` | 1 vCPU, bursts to 2 · 1 GB RAM · 100 connections · 5 GB SSD incl. | ₹499/month+18% GST |\n| DB Standard`pg_standard` | 1 vCPU, bursts to 2 · 2 GB RAM · 100 connections · 10 GB SSD incl. | ₹999/month+18% GST |\n| DB Pro`pg_basic_4gb` | 1 vCPU, bursts to 2 · 4 GB RAM · 100 connections · 10 GB SSD incl. | ₹1,999/month+18% GST |\n| DB Pro Max`pg_basic_256mb` | 2 vCPU, bursts to 4 · 8 GB RAM · 200 connections · 10 GB SSD incl. | ₹3,999/month+18% GST |\n\nI have no record of any pricing from last Tuesday, so I cannot provide a comparison. These are the current prices as of today. [1][2]",
-      "firstTokenMs": 906,
-      "answerStartMs": 7949,
-      "totalMs": 13073,
+      "answer": "I have no record of a conversation about Postgres hosting on Tuesday, 10 November 2026. Therefore, I cannot provide a comparison with any earlier pricing. However, here is the current pricing for Postgres hosting as of 16 November 2026:\n\n| Provider | Plan | CPU / RAM / Storage | Price |\n| --- | --- | --- | --- |\n| Bot Hosting | Free | 256 MB RAM, 512 MB storage | R$0 |\n| Bot Hosting | Starter | 1 GB RAM, 5 GB storage | R$8.99/month |\n| Voroa | DB Nano | Shared CPU, 256 MB RAM, 1 GB SSD | ₹0/month+18% GST |\n| Voroa | DB Starter | 0.5 vCPU, 1 GB RAM, 1 GB SSD | ₹299/month+18% GST |\n| Voroa | DB Basic | 1 vCPU, 1 GB RAM, 5 GB SSD | ₹499/month+18% GST |\n| Voroa | DB Standard | 1 vCPU, 2 GB RAM, 10 GB SSD | ₹999/month+18% GST |\n| Voroa | DB Pro | 1 vCPU, 4 GB RAM, 10 GB SSD | ₹1,999/month+18% GST |\n| Voroa | DB Pro Max | 2 vCPU, 8 GB RAM, 10 GB SSD | ₹3,999/month+18% GST |\n| Neon | Free | 1 GB per project, 100 compute hours/month | Free |\n| Supabase | Free | 500 MB per project, 2 active projects | Free |\n| Prisma Postgres | Free | 2 GB, 200,000 operations/month | Free |\n| Nile | Free | 1 GB | Free |\n| Aiven | Free | 1 GB | Free |\n\nSources:\n[1] https://bot-hosting.net/postgresql-hosting\n[2] https://getvoroa.com/managed-postgresql-india\n[3] https://fastero.com/blog/free-postgres-database\n\nIf you have specific providers or plans in mind that you discussed last Tuesday, please let me know, and I can check their current pricing for you.",
+      "firstTokenMs": 2453,
+      "answerStartMs": 6390,
+      "totalMs": 10151,
       "steps": 2,
       "searches": [
         {
           "query": "Postgres hosting pricing",
           "since": "2026-11-10",
-          "cached": false,
-          "ms": 1897,
+          "cached": true,
+          "ms": 1,
           "results": 3
         }
       ],
@@ -684,29 +706,29 @@
     }
   ],
   "summary": {
-    "passed": 13,
+    "passed": 15,
     "total": 15,
     "firstToken": {
-      "n": 14,
-      "mean": 1797,
-      "p50": 945,
-      "p90": 3304,
-      "max": 3386
+      "n": 15,
+      "mean": 2379,
+      "p50": 2371,
+      "p90": 3728,
+      "max": 4341
     },
     "answerStart": {
-      "n": 14,
-      "mean": 5557,
-      "p50": 4149,
-      "p90": 10431,
-      "max": 13582
+      "n": 15,
+      "mean": 5249,
+      "p50": 5788,
+      "p90": 9996,
+      "max": 10604
     },
     "total_": {
-      "n": 14,
-      "mean": 7476,
-      "p50": 6671,
-      "p90": 13073,
-      "max": 15949
+      "n": 15,
+      "mean": 7235,
+      "p50": 6726,
+      "p90": 12723,
+      "max": 16492
     },
-    "avgSearches": 1.5
+    "avgSearches": 1.6
   }
 }

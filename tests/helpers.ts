@@ -17,10 +17,23 @@ const usage = {
 
 export type Script = Array<{ text?: string; calls?: Array<{ name: string; input: unknown }> }>;
 
-/** A model that follows a script: each call to the model plays the next entry. */
-export function scriptedModel(script: Script) {
+/**
+ * A model that follows a script: each streamed call plays the next entry. Non-streaming calls (the guard's repair)
+ * play `generate` in order, and fail loudly if the script has none left, so an unexpected repair is a test failure.
+ */
+export function scriptedModel(script: Script, generate: string[] = []) {
   let i = 0;
+  let g = 0;
   const mock = new MockLanguageModelV4({
+    doGenerate: async () => {
+      if (g >= generate.length) throw new Error("unexpected repair call: the script has no more `generate` replies");
+      return {
+        content: [{ type: "text", text: generate[g++] }],
+        finishReason: { unified: "stop", raw: "stop" },
+        usage,
+        warnings: [],
+      } as never;
+    },
     doStream: async () => {
       const step = script[Math.min(i++, script.length - 1)];
       const parts: unknown[] = [{ type: "stream-start", warnings: [] }];

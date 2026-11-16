@@ -6,6 +6,7 @@ import {
   type InferUIMessageChunk,
   type LanguageModel,
   type ModelMessage,
+  type StreamTextEndEvent,
   type UIMessageChunk,
 } from "ai";
 import { DateTime } from "luxon";
@@ -23,15 +24,20 @@ import {
   type MessageRow,
   type SourceRow,
 } from "../db/repo";
+import { memoryChip } from "../memory/chip";
 import { renderMemoryBlock } from "../memory/context";
-import { retrieveMemory, summariseMemory } from "../memory/retrieve";
+import { retrieveMemory, summariseMemory, type Memory } from "../memory/retrieve";
 import { resolveDates } from "../temporal/resolve";
 import { normaliseCitations, stripThinking } from "../text";
 import { newTrace, type Trace } from "../trace";
 import type { ChatMessage, SearchToolOutput } from "../types";
+import { checkEarlierValues, renderEvidence } from "./evidence";
+import { inspectAnswer, repairAnswer } from "./guard";
+import { classifyIntent } from "./intent";
 import { mainModel, providerOptionsFor } from "./model";
+import { planPrefetch, recalledFacts } from "./prefetch";
 import { buildSystemPrompt } from "./prompt";
-import { SourceCollector, makeSearchTool, type SearchFn } from "./tool";
+import { SourceCollector, createSearchExecutor, makeSearchTool, type SearchFn } from "./tool";
 
 /** Model calls allowed per answer. The last one has tools switched off so it must answer. */
 export const MAX_STEPS = 5;
@@ -112,6 +118,13 @@ export function friendlyError(e: unknown): string {
   return "Something went wrong while answering. Please try again.";
 }
 
+const TURN_NOTES = {
+  recall:
+    "Web search is not available for this turn, because the user is asking what was said earlier and the answer is in the Prior conversations block. " +
+    "Answer from the block, quoting it faithfully with its date. If the user may also want current information, say what you would check and offer to do it.",
+  conceptual: "This is a general-knowledge question. No web search is needed: answer it directly and concisely from your own knowledge.",
+} as const;
+
 /**
  * One turn of the pipeline. The route, the eval harness and /debug all go through here.
  * Returns a UI message stream plus a promise that resolves when the turn is persisted.
@@ -142,19 +155,33 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
   // [1] resolve dates, [2] retrieve memory, [3] render it. Deterministic, a few milliseconds, no model call.
   // A failure here must never stop the answer: the model just runs without memory and the trace says why.
   let memoryBlock: string | undefined;
+  let memory: Memory | null = null;
   try {
     const refs = resolveDates(input.text, startedAt, tz);
     trace.resolvedDates = refs;
-    const memory = retrieveMemory({ userId: input.userId, threadId: input.threadId, text: input.text, refs, nowMs: startedAt, tz });
+    memory = retrieveMemory({ userId: input.userId, threadId: input.threadId, text: input.text, refs, nowMs: startedAt, tz });
     trace.memory = summariseMemory(memory);
     trace.timings.memoryMs = memory.ms;
     memoryBlock = renderMemoryBlock(memory, { tz, nowMs: startedAt });
     trace.memoryBlockChars = memoryBlock?.length ?? 0;
     trace.memoryBlock = memoryBlock;
+    trace.chip = memoryChip(memory, tz, input.userId);
   } catch (e) {
     console.error("[memory] skipped:", e);
     trace.memory = { error: (e as Error)?.message ?? String(e) };
   }
+
+  // [3b] Decide in code what kind of turn this is. Whether to search is not left to the model when a rule can say.
+  const intent = classifyIntent(input.text, memory);
+  trace.intent = intent;
+  const searchOn = intent.kind === "open" || intent.kind === "recheck";
+  // The search results as the model reads them, plus (on a re-check) the code's own check of each earlier value
+  // against today's pages. See evidence.ts: "$19 is not on the page" is a string search, not a judgment call.
+  const digestWithEvidence = (outs: SearchToolOutput[]) => {
+    const evidence = intent.kind === "recheck" && memory ? renderEvidence(checkEarlierValues(recalledFacts(memory, input.userId), outs)) : "";
+    return digestOfSearches(outs) + (evidence ? "\n\n" + evidence : "");
+  };
+  const turnNote = intent.kind === "recall" ? TURN_NOTES.recall : intent.kind === "conceptual" ? TURN_NOTES.conceptual : undefined;
 
   let resolveDone!: (o: TurnOutcome) => void;
   let rejectDone!: (e: unknown) => void;
@@ -182,9 +209,34 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
   const stream = createUIMessageStream<ChatMessage>({
     execute: async ({ writer }) => {
       writer.write({ type: "start", messageId: assistantId });
+      if (trace.chip) writer.write({ type: "data-memory", id: "memory", data: trace.chip });
 
-      const tools = { web_search: makeSearchTool({ sources, trace, writer, search: input.search }) };
-      const system = buildSystemPrompt({ now: startedAt, tz, memoryBlock });
+      const ctx = { sources, trace, writer, search: input.search };
+
+      // [3c] A re-check: start the searches ourselves, in parallel, from the pages the old answer was read from.
+      // The model then reads results in its first step instead of spending a step deciding what to search.
+      const prefetched: SearchToolOutput[] = [];
+      if (intent.kind === "recheck" && memory) {
+        const plan = planPrefetch(memory, tz, input.userId);
+        if (plan.length) {
+          const started = performance.now();
+          const exec = createSearchExecutor(ctx);
+          prefetched.push(...(await Promise.all(plan.map((p) => exec(p, { prefetched: true })))));
+          trace.prefetch = { planned: plan.length, ms: Math.round(performance.now() - started) };
+          if (trace.chip) {
+            trace.chip = { ...trace.chip, rechecked: plan.filter((p) => p.site).length };
+            writer.write({ type: "data-memory", id: "memory", data: trace.chip });
+          }
+        }
+      }
+
+      const system = buildSystemPrompt({
+        now: startedAt,
+        tz,
+        memoryBlock,
+        turnNote,
+        prefetched: prefetched.length ? digestWithEvidence(prefetched) : undefined,
+      });
       const messages: ModelMessage[] = [...threadHistory(history, historySources), { role: "user", content: input.text }];
 
       // Watchdog. A provider that hangs must end in a visible error, not an endless spinner.
@@ -208,27 +260,31 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
         clearTimeout(idle);
       };
 
+      let signalEnd!: (e: StreamTextEndEvent | null) => void;
+      const ended = new Promise<StreamTextEndEvent | null>((res) => (signalEnd = res));
+
+      const toolset = searchOn ? { web_search: makeSearchTool(ctx) } : undefined;
+
       const result = streamText({
         model,
         system,
         messages,
-        tools,
+        ...(toolset ? { tools: toolset } : {}),
         stopWhen: isStepCount(MAX_STEPS),
-        // Last step: tools off, so the model must write the answer with what it has.
         // Last step: tools off, so the model must write the answer with what it has.
         // Some providers (Bedrock) silently DROP all tool calls and results from the conversation when tools are
         // disabled, which left a model answering "no searches were available" with four results in hand. So the
         // gathered results are handed over as plain text in the instructions, and the tool traffic is removed
         // from the messages. Same behaviour on every provider.
         prepareStep: ({ stepNumber, steps, initialMessages }) =>
-          stepNumber >= MAX_STEPS - 1
+          toolset && stepNumber >= MAX_STEPS - 1
             ? {
                 toolChoice: "none",
                 messages: initialMessages,
                 instructions:
-                  buildSystemPrompt({ now: startedAt, tz, memoryBlock, searchesLeft: false }) +
+                  buildSystemPrompt({ now: startedAt, tz, memoryBlock, turnNote, searchesLeft: false }) +
                   "\n\n" +
-                  digestOfSearches(steps.flatMap((s) => s.toolResults.map((r) => r.output as SearchToolOutput))),
+                  digestWithEvidence([...prefetched, ...steps.flatMap((s) => s.toolResults.map((r) => r.output as SearchToolOutput))]),
               }
             : undefined,
         providerOptions: providerOptionsFor(label),
@@ -247,40 +303,15 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
           trace.error = watchdog.fired ? "timed out" : "aborted by client";
           persistTrace(false);
           rejectDone(new Error(trace.error));
+          signalEnd(null);
         },
-        onEnd: (event) => {
-          clearTimers();
-          // [persist 2/2] answer, sources, trace.
-          trace.timings.totalMs = Math.round(performance.now() - t0);
-          trace.steps = event.steps.length;
-          trace.finishReason = String(event.finishReason);
-          trace.usage = { inputTokens: event.totalUsage?.inputTokens, outputTokens: event.totalUsage?.outputTokens };
-          const text = normaliseCitations(stripThinking(event.text)).trim();
-          if (!text) {
-            const err = new Error("The model returned an empty answer.");
-            trace.error = err.message;
-            persistTrace(false);
-            rejectDone(err);
-            return;
-          }
-          const at = nowMs();
-          db().transaction(() => {
-            insertMessage({ id: assistantId, threadId: input.threadId, userId: input.userId, role: "assistant", content: text, createdAt: at, tz });
-            insertSources(
-              assistantId,
-              sources.all().map((s) => ({
-                n: s.n, url: s.url, title: s.title, fetched_at: s.fetchedAt, published_at: s.publishedAt, snippet: s.snippet,
-              })),
-            );
-          })();
-          persistTrace(true);
-          resolveDone({ assistantMessageId: assistantId, text, trace });
-        },
+        onEnd: (event) => signalEnd(event),
         onError: ({ error }) => {
           clearTimers();
           trace.error = (error as Error)?.message ?? String(error);
           persistTrace(false);
           rejectDone(error);
+          signalEnd(null);
         },
       });
 
@@ -288,7 +319,8 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
       // Turn it into an error the user can see. A user-pressed Stop stays a quiet abort.
       // onError here (not just on createUIMessageStream) is what turns a provider failure into readable text;
       // without it the SDK masks every error as "An error occurred."
-      const ui = toUIMessageStream({ stream: result.stream, sendStart: false, onError: friendlyError }).pipeThrough(
+      // The draft's chunks are forwarded one by one, in order, and "finish" is withheld: a repaired answer may follow.
+      const ui = toUIMessageStream({ stream: result.stream, sendStart: false, sendFinish: false, onError: friendlyError }).pipeThrough(
         new TransformStream<UIMessageChunk, UIMessageChunk>({
           transform(chunk, controller) {
             if (chunk.type === "abort" && watchdog.fired) {
@@ -297,7 +329,78 @@ export function runTurn(input: TurnInput): { stream: ReadableStream<UIMessageChu
           },
         }),
       );
-      writer.merge(ui as ReadableStream<InferUIMessageChunk<ChatMessage>>);
+      const reader = ui.getReader();
+      for (;;) {
+        const { done: finished, value } = await reader.read();
+        if (finished) break;
+        writer.write(value as InferUIMessageChunk<ChatMessage>);
+      }
+
+      const event = await ended;
+      if (!event) return; // aborted or failed: already recorded, and the error chunk (if any) has been written
+
+      // [4b] Check the answer against rules about form, and repair it once if it breaks one.
+      trace.steps = event.steps.length;
+      trace.finishReason = String(event.finishReason);
+      trace.usage = { inputTokens: event.totalUsage?.inputTokens, outputTokens: event.totalUsage?.outputTokens };
+      const outputs = [...prefetched, ...event.steps.flatMap((s) => s.toolResults.map((r) => r.output as SearchToolOutput))];
+      const entities = new Set(memory ? recalledFacts(memory, input.userId).map((f) => f.entity) : []);
+      let text = normaliseCitations(stripThinking(event.text)).trim();
+      const defects = inspectAnswer({ text, outputs, recheck: intent.kind === "recheck", recheckItems: entities.size });
+      trace.guard = { defects, repaired: false };
+
+      if (defects.length && !watchdog.fired) {
+        try {
+          const rewrite = await repairAnswer({
+            model,
+            system:
+              buildSystemPrompt({ now: startedAt, tz, memoryBlock, turnNote, searchesLeft: false }) +
+              "\n\n" +
+              digestWithEvidence(outputs),
+            messages,
+            draft: text,
+            defects,
+            providerOptions: providerOptionsFor(label),
+            abortSignal: signal,
+          });
+          const repaired = normaliseCitations(stripThinking(rewrite)).trim();
+          if (repaired) {
+            writer.write({ type: "data-revised", id: "revised", data: { reason: defects.join(" ") } });
+            writer.write({ type: "text-start", id: "revised-text" });
+            writer.write({ type: "text-delta", id: "revised-text", delta: repaired });
+            writer.write({ type: "text-end", id: "revised-text" });
+            text = repaired;
+            trace.guard.repaired = true;
+          }
+        } catch (e) {
+          console.error("[guard] repair failed, keeping the draft:", (e as Error)?.message ?? e);
+        }
+      }
+      clearTimers();
+
+      // [persist 2/2] answer, sources, trace.
+      trace.timings.totalMs = Math.round(performance.now() - t0);
+      if (!text) {
+        const err = new Error("The model returned an empty answer.");
+        trace.error = err.message;
+        persistTrace(false);
+        rejectDone(err);
+        writer.write({ type: "error", errorText: "The model returned an empty answer. Please try again." });
+        return;
+      }
+      const at = nowMs();
+      db().transaction(() => {
+        insertMessage({ id: assistantId, threadId: input.threadId, userId: input.userId, role: "assistant", content: text, createdAt: at, tz });
+        insertSources(
+          assistantId,
+          sources.all().map((s) => ({
+            n: s.n, url: s.url, title: s.title, fetched_at: s.fetchedAt, published_at: s.publishedAt, snippet: s.snippet,
+          })),
+        );
+      })();
+      persistTrace(true);
+      resolveDone({ assistantMessageId: assistantId, text, trace });
+      writer.write({ type: "finish" });
     },
     onError: (e) => {
       trace.error ??= (e as Error)?.message ?? String(e);

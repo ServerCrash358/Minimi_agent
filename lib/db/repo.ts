@@ -139,6 +139,22 @@ export function listTurnTraces(userId: string, limit = 30): TurnTraceRow[] {
   return db().prepare("SELECT * FROM turn_traces WHERE user_id = ? ORDER BY created_at DESC LIMIT ?").all(userId, limit) as TurnTraceRow[];
 }
 
+/** The memory chip each stored answer was shown with, read back from its trace when a chat is reopened. */
+export function getTraceChips(ids: string[]): Map<string, { kind: "recalled" | "none"; label: string; rechecked?: number }> {
+  const out = new Map<string, { kind: "recalled" | "none"; label: string; rechecked?: number }>();
+  if (!ids.length) return out;
+  const marks = ids.map(() => "?").join(",");
+  for (const row of db().prepare(`SELECT id, json FROM turn_traces WHERE id IN (${marks})`).all(...ids) as { id: string; json: string }[]) {
+    try {
+      const chip = (JSON.parse(row.json) as { chip?: { kind: "recalled" | "none"; label: string; rechecked?: number } }).chip;
+      if (chip) out.set(row.id, chip);
+    } catch {
+      /* a trace that cannot be read just means no chip */
+    }
+  }
+  return out;
+}
+
 export function getTurnTrace(id: string): TurnTraceRow | undefined {
   return db().prepare("SELECT * FROM turn_traces WHERE id = ?").get(id) as TurnTraceRow | undefined;
 }

@@ -3,8 +3,9 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { runTurn } from "../agent/run";
 import { setNowOverride, nowMs } from "../clock";
-import { openDb, useDb } from "../db";
+import { db, openDb, useDb } from "../db";
 import { extractFactsForMessage } from "../memory/facts";
+import { exportSearchCache, importSearchCache, type CacheRow } from "../search/cache";
 import type { SearchTrace, Trace } from "../trace";
 import type { EvalCase, EvalEnv } from "./cases";
 import { SUITES, type Suite } from "./suites";
@@ -67,13 +68,40 @@ export type RunOptions = {
   model?: { model: LanguageModel; label: string };
   search?: SearchFn;
   cases?: (env: EvalEnv) => EvalCase[];
+  /**
+   * Keep live search results between runs in this file. Results are keyed by day, so a rerun the same day re-reads
+   * the same pages for free, and a result from yesterday can never be served. Stubbed searches never touch it.
+   */
+  cacheFile?: string;
 };
+
+/**
+ * Every case starts from the seeded demo history and nothing else. Without this, a question asked by an earlier case
+ * became "history" for the next one: a case about "Friday" was answered by recalling an earlier case's question as a
+ * chat "from Monday". Demo rows (demo = 1) stay; everything a case created is removed.
+ */
+function resetCaseState() {
+  const d = db();
+  d.transaction(() => {
+    d.prepare("DELETE FROM facts WHERE message_id IN (SELECT id FROM messages WHERE demo = 0)").run();
+    d.prepare("DELETE FROM sources WHERE message_id IN (SELECT id FROM messages WHERE demo = 0)").run();
+    d.prepare("DELETE FROM messages WHERE demo = 0").run();
+    d.prepare("DELETE FROM threads WHERE id NOT IN (SELECT thread_id FROM messages)").run();
+  })();
+}
 
 export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
   const log = opts.log ?? (() => {});
   // A throwaway in-memory database: the eval never touches your real history.
   useDb(openDb(":memory:"));
   setNowOverride(null);
+  if (opts.cacheFile && fs.existsSync(opts.cacheFile)) {
+    try {
+      importSearchCache(JSON.parse(fs.readFileSync(opts.cacheFile, "utf8")) as CacheRow[]);
+    } catch {
+      /* an unreadable cache file is just a cold cache */
+    }
+  }
 
   const tz = process.env.EVAL_TZ || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
   const userId = "eval-seeded";
@@ -141,6 +169,7 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
       error = (e as Error)?.message ?? String(e); // e.g. a ConfigError thrown before the stream starts
     } finally {
       if (pinned !== null) setNowOverride(null);
+      resetCaseState();
     }
 
     const fallback: Trace = { startedAt: nowMs(), tz: caseTz, model: modelLabel, userText: c.question, resolvedDates: [], memory: null, searches: [], steps: 0, timings: {}, error };
@@ -164,6 +193,11 @@ export async function runEval(opts: RunOptions = {}): Promise<EvalReport> {
     });
     log(`    ${passed ? "PASS" : "FAIL"}  first token ${t.timings.firstTokenMs ?? "n/a"} ms, total ${t.timings.totalMs ?? "n/a"} ms, ${t.searches.length} searches${error ? `, error: ${error}` : ""}`);
     for (const ck of checks.filter((x) => !x.ok)) log(`      x ${ck.name}: ${ck.detail}`);
+  }
+
+  if (opts.cacheFile) {
+    fs.mkdirSync(path.dirname(opts.cacheFile), { recursive: true });
+    fs.writeFileSync(opts.cacheFile, JSON.stringify(exportSearchCache()));
   }
 
   const ok = results.filter((r) => !r.error);
